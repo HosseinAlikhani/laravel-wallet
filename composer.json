@@ -1,0 +1,61 @@
+{
+    "name": "d3cr33/wallet",
+    "description": "Laravel wallet",
+    "keywords": [
+        "d3cr33",
+        "laravel",
+        "wallet"
+    ],
+    "homepage": "https://github.com/HosseinAlikhani/laravel-wallet",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hossein Alikhani",
+            "email": "hossein.alikhani1374@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/auth": "^10.0",
+        "illuminate/container": "^10.0",
+        "illuminate/contracts": "^10.0",
+        "illuminate/database": "^10.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^7.6",
+        "fakerphp/faker": "^1.20",
+        "phpunit/phpunit": "^9.5.10",
+        "predis/predis": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "D3cr33\\Wallet\\": "src",
+            "D3cr33\\Wallet\\Test\\": "tests"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "D3cr33\\Wallet\\Test\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "D3cr33\\Wallet\\WalletServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "1.x-dev",
+            "dev-master": "1.x-dev"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
