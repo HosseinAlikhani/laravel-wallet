@@ -51,4 +51,13 @@ class WalletEvent implements WalletEventInterface
         $this->uuid = $uuid;
         return $this;
     }
+
+    /**
+     * get uuid
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
 }
