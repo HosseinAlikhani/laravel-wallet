@@ -9,35 +9,35 @@ class WalletEvent implements WalletEventInterface
      * event uuid - unique id
      * @var string
      */
-    private string $uuid;
+    public string $uuid;
 
     /**
      * event raise on which user authenticate id
      * @var string
      */
-    private string $userId;
+    public string $userId;
 
     /**
      * amount of event
      * @var int
      */
-    private int $amount;
+    public int $amount;
 
     /**
      * balance of event
      * @var int
      */
-    private int $balance;
+    public int $balance;
 
     /**
      * count of event that applied to aggregate
      * @var int
      */
-    private int $eventCount;
+    public int $eventCount;
 
     /**
      * dateTime when event raised
      * @var string
      */
-    private string $createdAt;
+    public string $createdAt;
 }
