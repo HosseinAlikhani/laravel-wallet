@@ -40,4 +40,15 @@ class WalletEvent implements WalletEventInterface
      * @var string
      */
     private string $createdAt;
+
+    /**
+     * set uuid
+     * @param string $uuid
+     * @return WalletEventInterface
+     */
+    public function setUuid(string $uuid): WalletEventInterface
+    {
+        $this->uuid = $uuid;
+        return $this;
+    }
 }
