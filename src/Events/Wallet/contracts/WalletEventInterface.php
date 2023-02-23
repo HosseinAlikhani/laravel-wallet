@@ -9,4 +9,10 @@ interface WalletEventInterface
      * @return WalletEventInterface
      */
     public function setUuid(string $uuid): WalletEventInterface;
+
+    /**
+     * get uuid
+     * @return string
+     */
+    public function getUuid(): string;
 }
