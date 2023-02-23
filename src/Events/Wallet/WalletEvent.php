@@ -1,7 +1,9 @@
 <?php
 namespace D3cr33\Wallet\Events\Wallet;
 
-class WalletEvent
+use D3cr33\Wallet\Events\Wallet\contracts\WalletEventInterface;
+
+class WalletEvent implements WalletEventInterface
 {
     /**
      * event uuid - unique id
