@@ -49,29 +49,19 @@ final class Wallet
 
     /**
      * initialize wallet aggregate
-     * @param WalletEventInterface|null $walletEvent
      * @return self
      */
-    public static function initialize(WalletEventInterface|null $walletEvent = null): self
+    public static function initialize(): self
     {
         $instance = new self();
-        $instance->setup($walletEvent);
+        $instance->setup();
         return $instance;
     }
 
-    private function setup(WalletEventInterface|null $walletEvent)
+    private function setup()
     {
-        if (! $walletEvent ){
-            $this->uuid = Str::uuid();
-            $this->createdAt = now();
-        } else {
-            $this->uuid = $walletEvent->uuid;
-            $this->userId = $walletEvent->userId;
-            $this->amount = $walletEvent->amount;
-            $this->balance = $walletEvent->balance;
-            $this->eventCount = $walletEvent->eventCount;
-            $this->createdAt = $walletEvent->createdAt;
-        }
+        $this->uuid = Str::uuid();
+        $this->createdAt = now();
     }
 
     /**
