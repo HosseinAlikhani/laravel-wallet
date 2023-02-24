@@ -24,12 +24,6 @@ class WalletEvent implements WalletEventInterface
     public int $amount;
 
     /**
-     * balance of event
-     * @var int
-     */
-    public int $balance;
-
-    /**
      * count of event that applied to aggregate
      * @var int
      */
@@ -40,4 +34,24 @@ class WalletEvent implements WalletEventInterface
      * @var string
      */
     public string $createdAt;
+
+    /**
+     * create new instance of wallet event
+     * @param string $uuid
+     * @param string $userId
+     * @param int $amount
+     * @param int $eventCount
+     */
+    public function __construct(
+        string $uuid,
+        string $userId,
+        int $amount,
+        int $eventCount
+    )
+    {
+        $this->uuid = $uuid;
+        $this->userId = $userId;
+        $this->amount = $amount;
+        $this->eventCount = $eventCount;
+    }
 }
