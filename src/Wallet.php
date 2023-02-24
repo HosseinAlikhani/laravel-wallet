@@ -47,6 +47,18 @@ final class Wallet
         //
     }
 
+    /**
+     * initialize wallet aggregate
+     * @param WalletEventInterface|null $walletEvent
+     * @return self
+     */
+    public static function initialize(WalletEventInterface|null $walletEvent = null): self
+    {
+        $instance = new self();
+        $instance->setup($walletEvent);
+        return $instance;
+    }
+
     private function setup(WalletEventInterface|null $walletEvent)
     {
         if (! $walletEvent ){
