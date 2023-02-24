@@ -2,6 +2,7 @@
 namespace D3cr33\Wallet;
 
 use D3cr33\Wallet\Events\Wallet\contracts\WalletEventInterface;
+use Illuminate\Support\Str;
 
 final class Wallet
 {
@@ -40,6 +41,21 @@ final class Wallet
      * @var string
      */
     public string $createdAt;
+
+    private function setup(WalletEventInterface|null $walletEvent)
+    {
+        if (! $walletEvent ){
+            $this->uuid = Str::uuid();
+            $this->createdAt = now();
+        } else {
+            $this->uuid = $walletEvent->uuid;
+            $this->userId = $walletEvent->userId;
+            $this->amount = $walletEvent->amount;
+            $this->balance = $walletEvent->balance;
+            $this->eventCount = $walletEvent->eventCount;
+            $this->createdAt = $walletEvent->createdAt;
+        }
+    }
 
     /**
      * apply event on wallet
