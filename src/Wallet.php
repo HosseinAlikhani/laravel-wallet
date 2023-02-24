@@ -42,6 +42,11 @@ final class Wallet
      */
     public string $createdAt;
 
+    private function __construct()
+    {
+        //
+    }
+
     private function setup(WalletEventInterface|null $walletEvent)
     {
         if (! $walletEvent ){
