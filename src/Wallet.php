@@ -2,6 +2,7 @@
 namespace D3cr33\Wallet;
 
 use D3cr33\Wallet\Events\Wallet\contracts\WalletEventInterface;
+use D3cr33\Wallet\Events\Wallet\IncreaseWalletEvent;
 use Illuminate\Support\Str;
 
 final class Wallet
@@ -34,7 +35,7 @@ final class Wallet
      * count of event that applied to aggregate
      * @var int
      */
-    public int $eventCount;
+    public int $eventCount = 0;
 
     /**
      * dateTime when event raised
@@ -77,5 +78,23 @@ final class Wallet
             $this->$method($walletEvent);
 
         }
+    }
+
+    /**
+     * charge wallet
+     * @param int $amount
+     * @param $userId
+     */
+    public function increase(int $amount, $userId): self
+    {
+        $increaseEvent = new IncreaseWalletEvent(
+            $this->uuid,
+            $userId,
+            $amount,
+            $this->eventCount + 1
+        );
+
+        $this->apply($increaseEvent);
+        return $this;
     }
 }
