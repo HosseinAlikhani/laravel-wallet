@@ -23,10 +23,9 @@
         "illuminate/database": "^10.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^7.6",
-        "fakerphp/faker": "^1.20",
-        "phpunit/phpunit": "^9.5.10",
-        "predis/predis": "^1.1"
+        "orchestra/testbench": "^8.0.4",
+        "fakerphp/faker": "^1.21.0",
+        "phpunit/phpunit": "^10.0.11"
     },
     "autoload": {
         "psr-4": {
