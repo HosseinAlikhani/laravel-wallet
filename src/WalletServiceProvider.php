@@ -10,7 +10,7 @@ class WalletServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->loadMigrtions();
+        //
     }
 
     /**
@@ -18,7 +18,7 @@ class WalletServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->loadMigrtions();
     }
 
     /**
@@ -26,7 +26,7 @@ class WalletServiceProvider extends ServiceProvider
      */
     private function loadMigrtions()
     {
-        $this->loadMigrationsFrom('/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
     }
 }
