@@ -10,7 +10,7 @@ class WalletServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->mergeConfigFrom(__DIR__.'/../config/wallet.php', 'wallet');
     }
 
     /**
@@ -18,15 +18,27 @@ class WalletServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadMigrtions();
+        $this->loadRequirements();
+        $this->registerPublishing();
     }
 
     /**
-     * load wallet migrations
+     * load requirements section
      */
-    private function loadMigrtions()
+    private function loadRequirements()
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'payment');
+    }
+
+    /**
+     * register publishing file
+     */
+    private function registerPublishing()
+    {
+        $this->publishes([
+            __DIR__.'/../config/wallet.php' => config_path('wallet.php'),
+        ], 'wallet-config');
     }
 }
