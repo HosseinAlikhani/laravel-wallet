@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wallets', function (Blueprint $table) {
+        Schema::create('wallet_snapshots', function (Blueprint $table) {
             $table->uuid('uuid');
             $table->string('user_id');
             $table->integer('amount');
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wallets');
+        Schema::dropIfExists('wallet_snapshots');
     }
 };
