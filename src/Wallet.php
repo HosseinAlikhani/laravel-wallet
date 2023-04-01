@@ -2,6 +2,7 @@
 namespace D3cr33\Wallet;
 
 use D3cr33\Wallet\Events\Contracts\WalletEventInterface;
+use D3cr33\Wallet\Events\DecreaseWalletEvent;
 use D3cr33\Wallet\Events\IncreaseWalletEvent;
 use Illuminate\Support\Str;
 
@@ -96,9 +97,10 @@ final class Wallet
     /**
      * charge wallet
      * @param int $amount
-     * @param $userId
+     * @param int $userId
+     * @return Wallet
      */
-    public function increase(int $amount, $userId): self
+    public function increase(int $amount, int $userId): Wallet
     {
         $increaseEvent = new IncreaseWalletEvent(
             $this->uuid,
@@ -108,6 +110,24 @@ final class Wallet
         );
 
         $this->apply($increaseEvent);
+        return $this;
+    }
+
+    /**
+     * decrease wallet
+     * @param int $amount
+     * @param int $userId
+     * @return Wallet
+     */
+    public function decrease(int $amount, int $userId): Wallet
+    {
+        $decreaseEvent = new DecreaseWalletEvent(
+            $this->uuid,
+            $userId,
+            $amount,
+            $this->eventCount + 1
+        );
+        $this->apply($decreaseEvent);
         return $this;
     }
 }
