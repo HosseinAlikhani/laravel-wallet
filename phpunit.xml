@@ -11,7 +11,7 @@
   </coverage>
 
   <testsuites>
-    <testsuite name="Routes Test Suite">
+    <testsuite name="Wallet Test Suite">
       <directory>./tests</directory>
     </testsuite>
   </testsuites>
