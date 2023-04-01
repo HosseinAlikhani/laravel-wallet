@@ -1,5 +1,5 @@
 <?php
-namespace D3cr33\Wallet\Events\contracts;
+namespace D3cr33\Wallet\Events\Contracts;
 
 interface WalletEventInterface
 {
