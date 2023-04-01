@@ -1,8 +1,8 @@
 <?php
 namespace D3cr33\Wallet;
 
-use D3cr33\Wallet\Events\Wallet\contracts\WalletEventInterface;
-use D3cr33\Wallet\Events\Wallet\IncreaseWalletEvent;
+use D3cr33\Wallet\Events\Contracts\WalletEventInterface;
+use D3cr33\Wallet\Events\IncreaseWalletEvent;
 use Illuminate\Support\Str;
 
 final class Wallet
@@ -59,9 +59,13 @@ final class Wallet
         return $instance;
     }
 
+    /**
+     * setup wallet
+     */
     private function setup()
     {
         $this->uuid = Str::uuid();
+        $this->amount = 0;
         $this->createdAt = now();
     }
 
@@ -76,8 +80,17 @@ final class Wallet
         $method    = 'apply' . $className;
         if (method_exists($this, $method)) {
             $this->$method($walletEvent);
-
         }
+    }
+
+    /**
+     * increase wallet event
+     * @param IncreaseWalletEvent $event
+     * @return void
+     */
+    private function applyIncreaseWalletEvent(IncreaseWalletEvent $event): void
+    {
+        $this->amount += $event->amount;
     }
 
     /**
