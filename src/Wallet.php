@@ -81,6 +81,8 @@ final class Wallet
         $method    = 'apply' . $className;
         if (method_exists($this, $method)) {
             $this->$method($walletEvent);
+            $this->eventCount = $walletEvent->eventCount;
+            $this->createdAt = $walletEvent->createdAt;
         }
     }
 
@@ -95,6 +97,16 @@ final class Wallet
     }
 
     /**
+     * decrease wallet event
+     * @param DecreaseWalletEvent $event
+     * @return void
+     */
+    private function applyDecreaseWalletEvent(DecreaseWalletEvent $event): void
+    {
+        $this->amount -= $event->amount;
+    }
+
+    /**
      * charge wallet
      * @param int $amount
      * @param int $userId
@@ -103,10 +115,10 @@ final class Wallet
     public function increase(int $amount, int $userId): Wallet
     {
         $increaseEvent = new IncreaseWalletEvent(
-            $this->uuid,
             $userId,
             $amount,
-            $this->eventCount + 1
+            $this->eventCount + 1,
+            now()
         );
 
         $this->apply($increaseEvent);
@@ -122,10 +134,10 @@ final class Wallet
     public function decrease(int $amount, int $userId): Wallet
     {
         $decreaseEvent = new DecreaseWalletEvent(
-            $this->uuid,
             $userId,
             $amount,
-            $this->eventCount + 1
+            $this->eventCount + 1,
+            now(),
         );
         $this->apply($decreaseEvent);
         return $this;
