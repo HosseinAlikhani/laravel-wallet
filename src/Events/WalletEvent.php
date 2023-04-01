@@ -1,7 +1,8 @@
 <?php
 namespace D3cr33\Wallet\Events;
 
-use D3cr33\Wallet\Events\Wallet\contracts\WalletEventInterface;
+use D3cr33\Wallet\Events\Contracts\WalletEventInterface;
+use Illuminate\Support\Str;
 
 class WalletEvent implements WalletEventInterface
 {
@@ -43,15 +44,16 @@ class WalletEvent implements WalletEventInterface
      * @param int $eventCount
      */
     public function __construct(
-        string $uuid,
         string $userId,
         int $amount,
-        int $eventCount
+        int $eventCount,
+        string $createdAt
     )
     {
-        $this->uuid = $uuid;
+        $this->uuid = Str::uuid();
         $this->userId = $userId;
         $this->amount = $amount;
         $this->eventCount = $eventCount;
+        $this->createdAt = $createdAt;
     }
 }

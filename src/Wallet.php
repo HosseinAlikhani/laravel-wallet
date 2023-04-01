@@ -1,8 +1,9 @@
 <?php
 namespace D3cr33\Wallet;
 
-use D3cr33\Wallet\Events\Wallet\contracts\WalletEventInterface;
-use D3cr33\Wallet\Events\Wallet\IncreaseWalletEvent;
+use D3cr33\Wallet\Events\Contracts\WalletEventInterface;
+use D3cr33\Wallet\Events\DecreaseWalletEvent;
+use D3cr33\Wallet\Events\IncreaseWalletEvent;
 use Illuminate\Support\Str;
 
 final class Wallet
@@ -43,6 +44,12 @@ final class Wallet
      */
     public string $createdAt;
 
+    /**
+     * recorded events
+     * @var array
+     */
+    public array $recoredEvents = [];
+
     private function __construct()
     {
         //
@@ -59,9 +66,13 @@ final class Wallet
         return $instance;
     }
 
+    /**
+     * setup wallet
+     */
     private function setup()
     {
         $this->uuid = Str::uuid();
+        $this->amount = 0;
         $this->createdAt = now();
     }
 
@@ -76,25 +87,76 @@ final class Wallet
         $method    = 'apply' . $className;
         if (method_exists($this, $method)) {
             $this->$method($walletEvent);
-
+            $this->eventCount = $walletEvent->eventCount;
+            $this->createdAt = $walletEvent->createdAt;
+            $this->recordEvent($walletEvent);
         }
+    }
+
+    /**
+     * increase wallet event
+     * @param IncreaseWalletEvent $event
+     * @return void
+     */
+    private function applyIncreaseWalletEvent(IncreaseWalletEvent $event): void
+    {
+        $this->amount += $event->amount;
+    }
+
+    /**
+     * decrease wallet event
+     * @param DecreaseWalletEvent $event
+     * @return void
+     */
+    private function applyDecreaseWalletEvent(DecreaseWalletEvent $event): void
+    {
+        $this->amount -= $event->amount;
+    }
+
+    /**
+     * recored apply events
+     * @param WalletEventInterface $walletEvent
+     * @return void
+     */
+    private function recordEvent(WalletEventInterface $walletEvent): void
+    {
+        $this->recoredEvents = array_merge($this->recoredEvents, [$walletEvent]);
     }
 
     /**
      * charge wallet
      * @param int $amount
-     * @param $userId
+     * @param int $userId
+     * @return Wallet
      */
-    public function increase(int $amount, $userId): self
+    public function increase(int $amount, int $userId): Wallet
     {
         $increaseEvent = new IncreaseWalletEvent(
-            $this->uuid,
             $userId,
             $amount,
-            $this->eventCount + 1
+            $this->eventCount + 1,
+            now()
         );
 
         $this->apply($increaseEvent);
+        return $this;
+    }
+
+    /**
+     * decrease wallet
+     * @param int $amount
+     * @param int $userId
+     * @return Wallet
+     */
+    public function decrease(int $amount, int $userId): Wallet
+    {
+        $decreaseEvent = new DecreaseWalletEvent(
+            $userId,
+            $amount,
+            $this->eventCount + 1,
+            now(),
+        );
+        $this->apply($decreaseEvent);
         return $this;
     }
 }
