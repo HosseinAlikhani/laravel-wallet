@@ -44,6 +44,12 @@ final class Wallet
      */
     public string $createdAt;
 
+    /**
+     * recorded events
+     * @var array
+     */
+    public array $recoredEvents = [];
+
     private function __construct()
     {
         //
@@ -83,6 +89,7 @@ final class Wallet
             $this->$method($walletEvent);
             $this->eventCount = $walletEvent->eventCount;
             $this->createdAt = $walletEvent->createdAt;
+            $this->recordEvent($walletEvent);
         }
     }
 
@@ -104,6 +111,16 @@ final class Wallet
     private function applyDecreaseWalletEvent(DecreaseWalletEvent $event): void
     {
         $this->amount -= $event->amount;
+    }
+
+    /**
+     * recored apply events
+     * @param WalletEventInterface $walletEvent
+     * @return void
+     */
+    private function recordEvent(WalletEventInterface $walletEvent): void
+    {
+        $this->recoredEvents = array_merge($this->recoredEvents, [$walletEvent]);
     }
 
     /**
