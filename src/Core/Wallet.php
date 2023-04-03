@@ -178,6 +178,7 @@ final class Wallet
 
         $this->apply($increaseEvent);
         $this->saveSnapshot();
+        $this->saveEvent($increaseEvent);
         return $this;
     }
 
@@ -206,6 +207,16 @@ final class Wallet
     private function saveSnapshot(): bool
     {
         return $this->walletRepository->updateOrCreateSnapshot($this);
+    }
+
+    /**
+     * save event
+     * @param WalletEventInterface $walletEvent
+     * @return bool
+     */
+    private function saveEvent(WalletEventInterface $walletEvent): bool
+    {
+        return $this->walletRepository->createEvent($walletEvent);
     }
 
     /**
