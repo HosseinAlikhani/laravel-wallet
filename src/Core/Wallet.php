@@ -1,6 +1,7 @@
 <?php
 namespace D3cr33\Wallet\Core;
 
+use D3cr33\Wallet\Core\Repositories\WalletRepository;
 use D3cr33\Wallet\Events\Contracts\WalletEventInterface;
 use D3cr33\Wallet\Events\DecreaseWalletEvent;
 use D3cr33\Wallet\Events\IncreaseWalletEvent;
@@ -51,6 +52,12 @@ final class Wallet
     public array $recoredEvents = [];
 
     /**
+     * store wallet repository
+     * @var WalletRepository
+     */
+    private WalletRepository $walletRepository;
+
+    /**
      * wallet constructor
      * @param string $uuid
      * @param string|null $userId
@@ -74,6 +81,8 @@ final class Wallet
         $this->balance = $balance;
         $this->eventCount = $eventCount;
         $this->createdAt = $createdAt;
+
+        $this->walletRepository = new WalletRepository();
     }
 
     /**
@@ -93,18 +102,14 @@ final class Wallet
         return $instance;
     }
 
-    public function restore(int $userId)
-    {
-
-    }
-
     /**
      * restore wallet from snapshot records
      * @param int $user
+     * @return Wallet|null
      */
-    private function restoreFromSnapshot(int $user)
+    private function findSnapshot(int $userId): Wallet|null
     {
-
+        return $this->walletRepository->findSnapshotByUserId($userId);
     }
 
     /**
