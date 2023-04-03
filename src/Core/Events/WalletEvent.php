@@ -1,5 +1,5 @@
 <?php
-namespace D3cr33\Wallet\Events;
+namespace D3cr33\Wallet\Events\Core;
 
 use D3cr33\Wallet\Events\Contracts\WalletEventInterface;
 use Illuminate\Support\Str;
