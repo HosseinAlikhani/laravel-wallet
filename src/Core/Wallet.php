@@ -1,5 +1,5 @@
 <?php
-namespace D3cr33\Wallet;
+namespace D3cr33\Wallet\Core;
 
 use D3cr33\Wallet\Events\Contracts\WalletEventInterface;
 use D3cr33\Wallet\Events\DecreaseWalletEvent;
