@@ -1,7 +1,7 @@
 <?php
 
-use D3cr33\Wallet\Events\DecreaseWalletEvent;
-use D3cr33\Wallet\Events\IncreaseWalletEvent;
+use D3cr33\Wallet\Core\Events\DecreaseWalletEvent;
+use D3cr33\Wallet\Core\Events\IncreaseWalletEvent;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
