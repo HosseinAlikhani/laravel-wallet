@@ -79,11 +79,12 @@ final class Wallet
         $this->createdAt = now();
     }
 
+
     /**
      * apply event on wallet
      * @param WalletEventInterface $walletEvent
      */
-    public function apply(WalletEventInterface $walletEvent)
+    private function apply(WalletEventInterface $walletEvent)
     {
         $class     = $walletEvent::class;
         $className = substr(strrchr($class, '\\'), 1);
