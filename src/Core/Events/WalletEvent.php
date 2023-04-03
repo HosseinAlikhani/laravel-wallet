@@ -4,7 +4,7 @@ namespace D3cr33\Wallet\Core\Events;
 use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
 use Illuminate\Support\Str;
 
-class WalletEvent implements WalletEventInterface
+abstract class WalletEvent implements WalletEventInterface
 {
     /**
      * event uuid - unique id
@@ -67,6 +67,7 @@ class WalletEvent implements WalletEventInterface
             'uuid'  =>  $this->uuid,
             'user_id'   =>  $this->userId,
             'amount'    =>  $this->amount,
+            'event_type'   =>  $this->getEventType(),
             'event_count'   =>  $this->eventCount,
             'created_at'    =>  $this->createdAt
         ];
