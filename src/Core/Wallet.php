@@ -2,9 +2,9 @@
 namespace D3cr33\Wallet\Core;
 
 use D3cr33\Wallet\Core\Repositories\WalletRepository;
-use D3cr33\Wallet\Events\Contracts\WalletEventInterface;
-use D3cr33\Wallet\Events\DecreaseWalletEvent;
-use D3cr33\Wallet\Events\IncreaseWalletEvent;
+use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
+use D3cr33\Wallet\Core\Events\DecreaseWalletEvent;
+use D3cr33\Wallet\Core\Events\IncreaseWalletEvent;
 use Illuminate\Support\Str;
 
 final class Wallet
@@ -123,6 +123,8 @@ final class Wallet
         $method    = 'apply' . $className;
         if (method_exists($this, $method)) {
             $this->$method($walletEvent);
+            $this->balance = $this->balance + $this->amount;
+            $this->userId = $walletEvent->userId;
             $this->eventCount = $walletEvent->eventCount;
             $this->createdAt = $walletEvent->createdAt;
             $this->recordEvent($walletEvent);
@@ -175,6 +177,7 @@ final class Wallet
         );
 
         $this->apply($increaseEvent);
+        $this->saveSnapshot();
         return $this;
     }
 
@@ -197,6 +200,15 @@ final class Wallet
     }
 
     /**
+     * save wallet snapshot
+     * @return bool
+     */
+    private function saveSnapshot(): bool
+    {
+        return $this->walletRepository->updateOrCreateSnapshot($this);
+    }
+
+    /**
      * convert std class to wallet object
      * @param object $wallet
      * @return Wallet
@@ -212,5 +224,21 @@ final class Wallet
             $wallet->event_count,
             $wallet->created_at
         );
+    }
+
+    /**
+     * to array wallet object
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'uuid'  =>  $this->uuid,
+            'user_id'   =>  $this->userId,
+            'amount'    =>  $this->amount,
+            'balance'   =>  $this->balance,
+            'event_count'   =>  $this->eventCount,
+            'created_at'    =>  $this->createdAt
+        ];
     }
 }
