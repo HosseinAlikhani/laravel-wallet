@@ -118,7 +118,6 @@ final class Wallet
         $method    = 'apply' . $className;
         if (method_exists($this, $method)) {
             $this->$method($walletEvent);
-            $this->balance = $this->balance + $this->amount;
             $this->eventCount = $walletEvent->eventCount;
             $this->createdAt = $walletEvent->createdAt;
             $this->recordEvent($walletEvent);
@@ -132,7 +131,8 @@ final class Wallet
      */
     private function applyIncreaseWalletEvent(IncreaseWalletEvent $event): void
     {
-        $this->amount += $event->amount;
+        $this->amount = $event->amount;
+        $this->balance += $event->amount;
     }
 
     /**
@@ -142,7 +142,8 @@ final class Wallet
      */
     private function applyDecreaseWalletEvent(DecreaseWalletEvent $event): void
     {
-        $this->amount -= $event->amount;
+        $this->amount = -$event->amount;
+        $this->balance -= $event->amount;
     }
 
     /**
@@ -158,13 +159,12 @@ final class Wallet
     /**
      * charge wallet
      * @param int $amount
-     * @param int $userId
      * @return Wallet
      */
-    public function increase(int $amount, int $userId): Wallet
+    public function increase(int $amount): Wallet
     {
         $increaseEvent = new IncreaseWalletEvent(
-            $userId,
+            $this->userId,
             $amount,
             $this->eventCount + 1,
             now()
@@ -179,18 +179,19 @@ final class Wallet
     /**
      * decrease wallet
      * @param int $amount
-     * @param int $userId
      * @return Wallet
      */
-    public function decrease(int $amount, int $userId): Wallet
+    public function decrease(int $amount): Wallet
     {
         $decreaseEvent = new DecreaseWalletEvent(
-            $userId,
+            $this->userId,
             $amount,
             $this->eventCount + 1,
             now(),
         );
         $this->apply($decreaseEvent);
+        $this->saveSnapshot();
+        $this->saveEvent($decreaseEvent);
         return $this;
     }
 
