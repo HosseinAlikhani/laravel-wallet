@@ -87,19 +87,14 @@ final class Wallet
 
     /**
      * initialize wallet aggregate
-     * @return self
+     * @param int $userId
+     * @return Wallet
      */
-    public static function initialize(): self
+    public static function initialize(int $userId): Wallet
     {
-        $instance = new self(
-            Str::uuid(),
-            null,
-            0,
-            0,
-            0,
-            now(),
-        );
-        return $instance;
+        $instance = new self(Str::uuid(), $userId, 0, 0, 0, now() );
+        $snapshot = $instance->findSnapshot($userId);
+        return $snapshot ?? $instance;
     }
 
     /**
@@ -124,7 +119,6 @@ final class Wallet
         if (method_exists($this, $method)) {
             $this->$method($walletEvent);
             $this->balance = $this->balance + $this->amount;
-            $this->userId = $walletEvent->userId;
             $this->eventCount = $walletEvent->eventCount;
             $this->createdAt = $walletEvent->createdAt;
             $this->recordEvent($walletEvent);
@@ -231,7 +225,6 @@ final class Wallet
             $wallet->user_id,
             $wallet->amount,
             $wallet->balance,
-            $wallet->event_type,
             $wallet->event_count,
             $wallet->created_at
         );
