@@ -50,9 +50,30 @@ final class Wallet
      */
     public array $recoredEvents = [];
 
-    private function __construct()
+    /**
+     * wallet constructor
+     * @param string $uuid
+     * @param string|null $userId
+     * @param int $amount
+     * @param int $balance
+     * @param int $eventCount
+     * @param string $createdAt
+     */
+    private function __construct(
+        string $uuid,
+        string|null $userId,
+        int $amount,
+        int $balance,
+        int $eventCount,
+        string $createdAt
+    )
     {
-        //
+        $this->uuid = $uuid;
+        $this->userId = $userId;
+        $this->amount = $amount;
+        $this->balance = $balance;
+        $this->eventCount = $eventCount;
+        $this->createdAt = $createdAt;
     }
 
     /**
@@ -61,24 +82,30 @@ final class Wallet
      */
     public static function initialize(): self
     {
-        $instance = new self();
-        $instance->setup();
+        $instance = new self(
+            Str::uuid(),
+            null,
+            0,
+            0,
+            0,
+            now(),
+        );
         return $instance;
     }
 
-    /**
-     * setup wallet
-     */
-    private function setup()
+    public function restore(int $userId)
     {
-        $this->uuid = Str::uuid();
-        $this->userId = null;
-        $this->amount = 0;
-        $this->balance = 0;
-        $this->eventCount = 0;
-        $this->createdAt = now();
+
     }
 
+    /**
+     * restore wallet from snapshot records
+     * @param int $user
+     */
+    private function restoreFromSnapshot(int $user)
+    {
+
+    }
 
     /**
      * apply event on wallet
@@ -162,5 +189,23 @@ final class Wallet
         );
         $this->apply($decreaseEvent);
         return $this;
+    }
+
+    /**
+     * convert std class to wallet object
+     * @param object $wallet
+     * @return Wallet
+     */
+    public static function toObject(object $wallet): Wallet
+    {
+        return new self(
+            $wallet->uuid,
+            $wallet->user_id,
+            $wallet->amount,
+            $wallet->balance,
+            $wallet->event_type,
+            $wallet->event_count,
+            $wallet->created_at
+        );
     }
 }
