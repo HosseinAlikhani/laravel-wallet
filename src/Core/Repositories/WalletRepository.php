@@ -4,7 +4,7 @@ namespace D3cr33\Wallet\Core\Repositories;
 use D3cr33\Wallet\Core\Wallet;
 use Illuminate\Support\Facades\DB;
 
-final class WalletSnapshotRepository
+final class WalletRepository
 {
     /**
      * store table name
