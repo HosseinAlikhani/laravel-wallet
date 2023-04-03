@@ -34,6 +34,12 @@ final class Wallet
     public int $balance;
 
     /**
+     * store event type
+     * @var string
+     */
+    public string|null $eventType;
+
+    /**
      * count of event that applied to aggregate
      * @var int
      */
@@ -71,6 +77,7 @@ final class Wallet
         string|null $userId,
         int $amount,
         int $balance,
+        string|null $eventType,
         int $eventCount,
         string $createdAt
     )
@@ -79,6 +86,7 @@ final class Wallet
         $this->userId = $userId;
         $this->amount = $amount;
         $this->balance = $balance;
+        $this->eventType = $eventType;
         $this->eventCount = $eventCount;
         $this->createdAt = $createdAt;
 
@@ -92,7 +100,7 @@ final class Wallet
      */
     public static function initialize(int $userId): Wallet
     {
-        $instance = new self(Str::uuid(), $userId, 0, 0, 0, now() );
+        $instance = new self(Str::uuid(), $userId, 0, 0, null, 0, now() );
         $snapshot = $instance->findSnapshot($userId);
         return $snapshot ?? $instance;
     }
@@ -119,6 +127,7 @@ final class Wallet
         if (method_exists($this, $method)) {
             $this->$method($walletEvent);
             $this->eventCount = $walletEvent->eventCount;
+            $this->eventType = $walletEvent->getEventType();
             $this->createdAt = $walletEvent->createdAt;
             $this->recordEvent($walletEvent);
         }
@@ -142,7 +151,7 @@ final class Wallet
      */
     private function applyDecreaseWalletEvent(DecreaseWalletEvent $event): void
     {
-        $this->amount = -$event->amount;
+        $this->amount = $event->amount;
         $this->balance -= $event->amount;
     }
 
@@ -226,6 +235,7 @@ final class Wallet
             $wallet->user_id,
             $wallet->amount,
             $wallet->balance,
+            $wallet->event_type,
             $wallet->event_count,
             $wallet->created_at
         );
@@ -242,6 +252,7 @@ final class Wallet
             'user_id'   =>  $this->userId,
             'amount'    =>  $this->amount,
             'balance'   =>  $this->balance,
+            'event_type'    =>  $this->eventType,
             'event_count'   =>  $this->eventCount,
             'created_at'    =>  $this->createdAt
         ];
