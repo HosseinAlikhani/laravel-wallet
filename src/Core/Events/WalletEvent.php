@@ -1,7 +1,7 @@
 <?php
-namespace D3cr33\Wallet\Events\Core;
+namespace D3cr33\Wallet\Core\Events;
 
-use D3cr33\Wallet\Events\Contracts\WalletEventInterface;
+use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
 use Illuminate\Support\Str;
 
 class WalletEvent implements WalletEventInterface

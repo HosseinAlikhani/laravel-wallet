@@ -1,5 +1,5 @@
 <?php
-namespace D3cr33\Wallet\Events\Core;
+namespace D3cr33\Wallet\Core\Events;
 
 final class IncreaseWalletEvent extends WalletEvent
 {
