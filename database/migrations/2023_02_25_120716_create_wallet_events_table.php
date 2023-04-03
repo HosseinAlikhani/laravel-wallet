@@ -17,7 +17,6 @@ return new class extends Migration
             $table->uuid('uuid');
             $table->string('user_id');
             $table->integer('amount');
-            $table->integer('balance');
             $table->enum('event_type', [
                 IncreaseWalletEvent::EVENT_TYPE,
                 DecreaseWalletEvent::EVENT_TYPE
