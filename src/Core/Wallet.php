@@ -16,9 +16,9 @@ final class Wallet
 
     /**
      * event raise on which user authenticate id
-     * @var string
+     * @var string|null
      */
-    public string $userId;
+    public string|null $userId;
 
     /**
      * amount of event
@@ -72,7 +72,10 @@ final class Wallet
     private function setup()
     {
         $this->uuid = Str::uuid();
+        $this->userId = null;
         $this->amount = 0;
+        $this->balance = 0;
+        $this->eventCount = 0;
         $this->createdAt = now();
     }
 
