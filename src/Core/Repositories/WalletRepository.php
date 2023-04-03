@@ -1,15 +1,21 @@
 <?php
 namespace D3cr33\Wallet\Core\Repositories;
 
+use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
 use D3cr33\Wallet\Core\Wallet;
 use Illuminate\Support\Facades\DB;
 
 final class WalletRepository
 {
     /**
-     * store table name
+     * store snapshot table name
      */
     public const TABLE_SNAPSHOT = 'wallet_snapshots';
+
+    /**
+     * store event table name
+     */
+    public const TABLE_EVENT = 'wallet_events';
 
     /**
      * find snapshot by user id
@@ -34,5 +40,15 @@ final class WalletRepository
             ['user_id'   =>  $wallet->userId],
             array_merge($wallet->toArray(), ['updated_at' => now()])
         );
+    }
+
+    /**
+     * create wallet event
+     * @param WalletEventInterface $walletEvent
+     * @return bool
+     */
+    public function createEvent(WalletEventInterface $walletEvent)
+    {
+        return DB::table(self::TABLE_EVENT)->insert($walletEvent->toArray());
     }
 }

@@ -56,4 +56,19 @@ class WalletEvent implements WalletEventInterface
         $this->eventCount = $eventCount;
         $this->createdAt = $createdAt;
     }
+
+    /**
+     * to array wallet event
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'uuid'  =>  $this->uuid,
+            'user_id'   =>  $this->userId,
+            'amount'    =>  $this->amount,
+            'event_count'   =>  $this->eventCount,
+            'created_at'    =>  $this->createdAt
+        ];
+    }
 }
