@@ -8,4 +8,10 @@ interface WalletEventInterface
      * @return array
      */
     public function toArray(): array;
+
+    /**
+     * get event type
+     * @return string
+     */
+    public function getEventType(): string;
 }
