@@ -2,6 +2,7 @@
 namespace D3cr33\Wallet\Core\Events;
 
 use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
+use Exception;
 use Illuminate\Support\Str;
 
 abstract class WalletEvent implements WalletEventInterface
@@ -71,5 +72,32 @@ abstract class WalletEvent implements WalletEventInterface
             'event_count'   =>  $this->eventCount,
             'created_at'    =>  $this->createdAt
         ];
+    }
+
+    /**
+     * convert to wallet event object
+     * @param object $event
+     * @return WalletEvent
+     */
+    public static function toObject(object $event): WalletEvent
+    {
+        $namespace = null;
+        switch($event->event_type){
+            case IncreaseWalletEvent::EVENT_TYPE: 
+                $namespace = IncreaseWalletEvent::class;
+                break;
+            case DecreaseWalletEvent::EVENT_TYPE:
+                $namespace = DecreaseWalletEvent::class;
+                break;
+            default:
+                throw new Exception(trans('wallet::messages.wallet_record_not_valid'));
+        }
+
+        return new $namespace(
+            $event->user_id,
+            $event->amount,
+            $event->event_count,
+            $event->created_at
+        );
     }
 }
