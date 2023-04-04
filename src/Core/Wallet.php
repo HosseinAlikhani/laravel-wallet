@@ -173,7 +173,7 @@ final class Wallet
      */
     public function increase(int $amount): Wallet
     {
-        $increaseEvent = new IncreaseWalletEvent(
+        $increaseEvent = IncreaseWalletEvent::initialize(
             $this->userId,
             $amount,
             $this->eventCount + 1,
@@ -193,7 +193,7 @@ final class Wallet
      */
     public function decrease(int $amount): Wallet
     {
-        $decreaseEvent = new DecreaseWalletEvent(
+        $decreaseEvent = DecreaseWalletEvent::initialize(
             $this->userId,
             $amount,
             $this->eventCount + 1,
