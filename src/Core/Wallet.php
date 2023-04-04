@@ -5,6 +5,7 @@ use D3cr33\Wallet\Core\Repositories\WalletRepository;
 use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
 use D3cr33\Wallet\Core\Events\DecreaseWalletEvent;
 use D3cr33\Wallet\Core\Events\IncreaseWalletEvent;
+use Exception;
 use Illuminate\Support\Str;
 
 final class Wallet
@@ -172,7 +173,7 @@ final class Wallet
      */
     public function increase(int $amount): Wallet
     {
-        $increaseEvent = new IncreaseWalletEvent(
+        $increaseEvent = IncreaseWalletEvent::initialize(
             $this->userId,
             $amount,
             $this->eventCount + 1,
@@ -180,8 +181,8 @@ final class Wallet
         );
 
         $this->apply($increaseEvent);
-        $this->saveSnapshot();
         $this->saveEvent($increaseEvent);
+        $this->saveSnapshot();
         return $this;
     }
 
@@ -192,15 +193,15 @@ final class Wallet
      */
     public function decrease(int $amount): Wallet
     {
-        $decreaseEvent = new DecreaseWalletEvent(
+        $decreaseEvent = DecreaseWalletEvent::initialize(
             $this->userId,
             $amount,
             $this->eventCount + 1,
             now(),
         );
         $this->apply($decreaseEvent);
-        $this->saveSnapshot();
         $this->saveEvent($decreaseEvent);
+        $this->saveSnapshot();
         return $this;
     }
 
@@ -220,7 +221,23 @@ final class Wallet
      */
     private function saveEvent(WalletEventInterface $walletEvent): bool
     {
+        $this->checkEventCount($walletEvent);
+        
         return $this->walletRepository->createEvent($walletEvent);
+    }
+
+    /**
+     * check wallet event count
+     * @param WalletEventInterface $walletEvent
+     * @return bool
+     */
+    private function checkEventCount(WalletEventInterface $walletEvent): bool
+    {
+        $lastEvent = $this->walletRepository->findLastEventByUserId($walletEvent->userId);
+        if( $lastEvent && $lastEvent->eventCount != $walletEvent->eventCount - 1 ){
+            throw new Exception(trans('wallet::messages.event_count_not_valid'));
+        }
+        return true;
     }
 
     /**

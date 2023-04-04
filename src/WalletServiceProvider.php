@@ -29,7 +29,7 @@ class WalletServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'payment');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'wallet');
     }
 
     /**

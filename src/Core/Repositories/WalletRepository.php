@@ -2,6 +2,7 @@
 namespace D3cr33\Wallet\Core\Repositories;
 
 use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
+use D3cr33\Wallet\Core\Events\WalletEvent;
 use D3cr33\Wallet\Core\Wallet;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,20 @@ final class WalletRepository
      * store event table name
      */
     public const TABLE_EVENT = 'wallet_events';
+
+    /**
+     * find last event by user id
+     * @param int $userId
+     * @return WalletEvent|null
+     */
+    public function findLastEventByUserId(int $userId): WalletEvent|null
+    {
+        $result = DB::table(self::TABLE_EVENT)
+            ->where('user_id', $userId)
+            ->orderByDesc('event_count')
+            ->first();
+        return  $result ? WalletEvent::toObject($result) : null;
+    }
 
     /**
      * find snapshot by user id

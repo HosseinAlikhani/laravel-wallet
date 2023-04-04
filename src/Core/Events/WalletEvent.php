@@ -2,9 +2,10 @@
 namespace D3cr33\Wallet\Core\Events;
 
 use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
+use Exception;
 use Illuminate\Support\Str;
 
-abstract class WalletEvent implements WalletEventInterface
+class WalletEvent
 {
     /**
      * event uuid - unique id
@@ -42,19 +43,43 @@ abstract class WalletEvent implements WalletEventInterface
      * @param string $userId
      * @param int $amount
      * @param int $eventCount
+     * @param string $createdAt
      */
-    public function __construct(
+    private function __construct(
+        string $uuid,
         string $userId,
         int $amount,
         int $eventCount,
         string $createdAt
     )
     {
-        $this->uuid = Str::uuid();
+        $this->uuid = $uuid;
         $this->userId = $userId;
         $this->amount = $amount;
         $this->eventCount = $eventCount;
         $this->createdAt = $createdAt;
+    }
+
+    /**
+     * initialize wallet event
+     * @param string $userId
+     * @param int $amount
+     * @param int $eventCount
+     * @param string $createdAt
+     */
+    public static function initialize(
+        string $userId,
+        int $amount,
+        int $eventCount,
+        string $createdAt
+    ){
+        return new static(
+            Str::uuid(),
+            $userId,
+            $amount,
+            $eventCount,
+            $createdAt
+        );
     }
 
     /**
@@ -71,5 +96,33 @@ abstract class WalletEvent implements WalletEventInterface
             'event_count'   =>  $this->eventCount,
             'created_at'    =>  $this->createdAt
         ];
+    }
+
+    /**
+     * convert to wallet event object
+     * @param object $event
+     * @return WalletEvent
+     */
+    public static function toObject(object $event): WalletEvent
+    {
+        $namespace = null;
+        switch($event->event_type){
+            case IncreaseWalletEvent::EVENT_TYPE: 
+                $namespace = IncreaseWalletEvent::class;
+                break;
+            case DecreaseWalletEvent::EVENT_TYPE:
+                $namespace = DecreaseWalletEvent::class;
+                break;
+            default:
+                throw new Exception(trans('wallet::messages.wallet_record_not_valid'));
+        }
+
+        return new $namespace(
+            $event->uuid,
+            $event->user_id,
+            $event->amount,
+            $event->event_count,
+            $event->created_at
+        );
     }
 }

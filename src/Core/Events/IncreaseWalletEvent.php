@@ -1,7 +1,11 @@
 <?php
 namespace D3cr33\Wallet\Core\Events;
 
-final class IncreaseWalletEvent extends WalletEvent
+use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
+
+final class IncreaseWalletEvent 
+    extends WalletEvent
+    implements WalletEventInterface
 {
     public const EVENT_TYPE = 'IncreaseWallet';
 
