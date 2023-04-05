@@ -14,4 +14,10 @@ interface WalletResponseInterface
      * @return string
      */
     public function getMessage(): string;
+    
+    /**
+     * is response successfull
+     * @return bool
+     */
+    public function isSuccessfull(): bool
 }
