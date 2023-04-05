@@ -50,4 +50,13 @@ final class WalletResponse implements WalletResponseInterface
     {
         return $this->data;
     }
+
+    /**
+     * get response message
+     * @return string
+     */
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
 }
