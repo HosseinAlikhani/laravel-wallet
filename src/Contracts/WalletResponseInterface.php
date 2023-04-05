@@ -19,5 +19,5 @@ interface WalletResponseInterface
      * is response successfull
      * @return bool
      */
-    public function isSuccessfull(): bool
+    public function isSuccessfull(): bool;
 }
