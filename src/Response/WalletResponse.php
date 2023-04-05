@@ -59,4 +59,13 @@ final class WalletResponse implements WalletResponseInterface
     {
         return $this->message;
     }
+
+    /**
+     * is response successfull
+     * @return bool
+     */
+    public function isSuccessfull(): bool
+    {
+        return $this->status == 200 || $this->status || 201 ? true : false;
+    }
 }
