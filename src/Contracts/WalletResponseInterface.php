@@ -5,16 +5,16 @@ interface WalletResponseInterface
 {
     /**
      * get response data
-     * @return array
+     * @return array|null
      */
-    public function getData(): array;
+    public function getData(): array|null;
 
     /**
      * get response message
-     * @return string
+     * @return string|null
      */
-    public function getMessage(): string;
-    
+    public function getMessage(): string|null;
+
     /**
      * is response successfull
      * @return bool
