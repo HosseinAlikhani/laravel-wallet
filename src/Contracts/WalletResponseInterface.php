@@ -8,4 +8,10 @@ interface WalletResponseInterface
      * @return array
      */
     public function getData(): array;
+
+    /**
+     * get response message
+     * @return string
+     */
+    public function getMessage(): string;
 }
