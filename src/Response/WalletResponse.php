@@ -30,7 +30,7 @@ final class WalletResponse implements WalletResponseInterface
      * @param array $data
      * @param $args
      */
-    private function __construct(
+    public function __construct(
         int $status,
         string|null $message,
         array|null $data,
