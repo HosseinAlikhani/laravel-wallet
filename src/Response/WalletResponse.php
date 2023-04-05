@@ -41,4 +41,13 @@ final class WalletResponse implements WalletResponseInterface
         $this->message = $message;
         $this->data = $data;
     }
+
+    /**
+     * get response data
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
 }
