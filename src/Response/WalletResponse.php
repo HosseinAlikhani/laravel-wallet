@@ -19,9 +19,9 @@ final class WalletResponse implements WalletResponseInterface
 
     /**
      * store data
-     * @var array
+     * @var array|null
      */
-    private array $data;
+    private array|null $data;
 
     /**
      * constructor of wallet response
@@ -33,7 +33,7 @@ final class WalletResponse implements WalletResponseInterface
     private function __construct(
         int $status,
         string $message,
-        array $data,
+        array|null $data,
         ...$args
     )
     {
@@ -44,9 +44,9 @@ final class WalletResponse implements WalletResponseInterface
 
     /**
      * get response data
-     * @return array
+     * @return array|null
      */
-    public function getData(): array
+    public function getData(): array|null
     {
         return $this->data;
     }
