@@ -2,6 +2,7 @@
 namespace D3cr33\Wallet\Core\Events;
 
 use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
+use D3cr33\Wallet\Core\Exceptions\WalletEventException;
 use Exception;
 use Illuminate\Support\Str;
 
@@ -111,30 +112,34 @@ class WalletEvent
 
     /**
      * convert to wallet event object
-     * @param object $event
+     * @param array $event
      * @return WalletEvent
      */
-    public static function toObject(object $event): WalletEvent
+    public static function toObject(array $event): WalletEvent
     {
-        $namespace = null;
-        switch($event->event_type){
-            case IncreaseWalletEvent::EVENT_TYPE:
-                $namespace = IncreaseWalletEvent::class;
-                break;
-            case DecreaseWalletEvent::EVENT_TYPE:
-                $namespace = DecreaseWalletEvent::class;
-                break;
-            default:
-                throw new Exception(trans('wallet::messages.wallet_record_not_valid'));
-        }
+        try{
+            $namespace = null;
+            switch($event['event_type']){
+                case IncreaseWalletEvent::EVENT_TYPE:
+                    $namespace = IncreaseWalletEvent::class;
+                    break;
+                case DecreaseWalletEvent::EVENT_TYPE:
+                    $namespace = DecreaseWalletEvent::class;
+                    break;
+                default:
+                    throw new Exception(trans('wallet::messages.wallet_record_not_valid'));
+            }
 
-        return new $namespace(
-            $event->uuid,
-            $event->user_id,
-            $event->amount,
-            $event->event_count,
-            $event->created_at,
-            $event->detail,
-        );
+            return new $namespace(
+                $event['uuid'],
+                $event['user_id'],
+                $event['amount'],
+                $event['event_count'],
+                $event['created_at'],
+                $event['detail'],
+            );
+        }catch(Exception $e){
+            throw new WalletEventException($e);
+        }
     }
 }
