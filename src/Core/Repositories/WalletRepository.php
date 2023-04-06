@@ -33,7 +33,7 @@ final class WalletRepository
             return null;
         }
 
-        $result->detail = json_encode($result->detail);
+        $result->detail = json_decode($result->detail);
         return WalletEvent::toObject($result);
     }
 
