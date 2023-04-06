@@ -64,6 +64,8 @@ final class WalletRepository
      */
     public function createEvent(WalletEventInterface $walletEvent)
     {
-        return DB::table(self::TABLE_EVENT)->insert($walletEvent->toArray());
+        $data = $walletEvent->toArray();
+        $data['detail'] = json_encode($data['detail']);
+        return DB::table(self::TABLE_EVENT)->insert($data);
     }
 }
