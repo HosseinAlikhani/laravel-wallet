@@ -35,6 +35,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "D3cr33\\Wallet\\": "src",
             "D3cr33\\Wallet\\Test\\": "tests"
         }
     },
