@@ -2,6 +2,7 @@
 namespace D3cr33\Wallet\Core\Events;
 
 use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
+use D3cr33\Wallet\Core\Exceptions\WalletEventException;
 use Exception;
 use Illuminate\Support\Str;
 
@@ -38,6 +39,12 @@ class WalletEvent
     public string $createdAt;
 
     /**
+     * store detail of events
+     * @var array
+     */
+    public array $detail;
+
+    /**
      * create new instance of wallet event
      * @param string $uuid
      * @param string $userId
@@ -50,13 +57,15 @@ class WalletEvent
         string $userId,
         int $amount,
         int $eventCount,
-        string $createdAt
+        string $createdAt,
+        array $detail
     )
     {
         $this->uuid = $uuid;
         $this->userId = $userId;
         $this->amount = $amount;
         $this->eventCount = $eventCount;
+        $this->detail = $detail;
         $this->createdAt = $createdAt;
     }
 
@@ -71,14 +80,16 @@ class WalletEvent
         string $userId,
         int $amount,
         int $eventCount,
-        string $createdAt
+        string $createdAt,
+        array $detail
     ){
         return new static(
             Str::uuid(),
             $userId,
             $amount,
             $eventCount,
-            $createdAt
+            $createdAt,
+            $detail
         );
     }
 
@@ -94,35 +105,41 @@ class WalletEvent
             'amount'    =>  $this->amount,
             'event_type'   =>  $this->getEventType(),
             'event_count'   =>  $this->eventCount,
-            'created_at'    =>  $this->createdAt
+            'detail'    =>  $this->detail,
+            'created_at'    =>  $this->createdAt,
         ];
     }
 
     /**
      * convert to wallet event object
-     * @param object $event
+     * @param array $event
      * @return WalletEvent
      */
-    public static function toObject(object $event): WalletEvent
+    public static function toObject(array $event): WalletEvent
     {
-        $namespace = null;
-        switch($event->event_type){
-            case IncreaseWalletEvent::EVENT_TYPE: 
-                $namespace = IncreaseWalletEvent::class;
-                break;
-            case DecreaseWalletEvent::EVENT_TYPE:
-                $namespace = DecreaseWalletEvent::class;
-                break;
-            default:
-                throw new Exception(trans('wallet::messages.wallet_record_not_valid'));
-        }
+        try{
+            $namespace = null;
+            switch($event['event_type']){
+                case IncreaseWalletEvent::EVENT_TYPE:
+                    $namespace = IncreaseWalletEvent::class;
+                    break;
+                case DecreaseWalletEvent::EVENT_TYPE:
+                    $namespace = DecreaseWalletEvent::class;
+                    break;
+                default:
+                    throw new Exception(trans('wallet::messages.wallet_record_not_valid'));
+            }
 
-        return new $namespace(
-            $event->uuid,
-            $event->user_id,
-            $event->amount,
-            $event->event_count,
-            $event->created_at
-        );
+            return new $namespace(
+                $event['uuid'],
+                $event['user_id'],
+                $event['amount'],
+                $event['event_count'],
+                $event['created_at'],
+                $event['detail'],
+            );
+        }catch(Exception $e){
+            throw new WalletEventException($e);
+        }
     }
 }

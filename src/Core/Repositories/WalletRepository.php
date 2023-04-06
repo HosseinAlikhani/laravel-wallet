@@ -29,7 +29,12 @@ final class WalletRepository
             ->where('user_id', $userId)
             ->orderByDesc('event_count')
             ->first();
-        return  $result ? WalletEvent::toObject($result) : null;
+        if(! $result){
+            return null;
+        }
+
+        $result->detail = (array) json_decode($result->detail);
+        return WalletEvent::toObject((array) $result);
     }
 
     /**
@@ -64,6 +69,8 @@ final class WalletRepository
      */
     public function createEvent(WalletEventInterface $walletEvent)
     {
-        return DB::table(self::TABLE_EVENT)->insert($walletEvent->toArray());
+        $data = $walletEvent->toArray();
+        $data['detail'] = json_encode($data['detail']);
+        return DB::table(self::TABLE_EVENT)->insert($data);
     }
 }

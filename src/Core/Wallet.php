@@ -169,15 +169,17 @@ final class Wallet
     /**
      * charge wallet
      * @param int $amount
+     * @param array $detail
      * @return Wallet
      */
-    public function increase(int $amount): Wallet
+    public function increase(int $amount, array $detail = []): Wallet
     {
         $increaseEvent = IncreaseWalletEvent::initialize(
             $this->userId,
             $amount,
             $this->eventCount + 1,
-            now()
+            now(),
+            $detail
         );
 
         $this->apply($increaseEvent);
@@ -189,15 +191,17 @@ final class Wallet
     /**
      * decrease wallet
      * @param int $amount
+     * @param array $detail
      * @return Wallet
      */
-    public function decrease(int $amount): Wallet
+    public function decrease(int $amount, array $detail = []): Wallet
     {
         $decreaseEvent = DecreaseWalletEvent::initialize(
             $this->userId,
             $amount,
             $this->eventCount + 1,
             now(),
+            $detail
         );
         $this->apply($decreaseEvent);
         $this->saveEvent($decreaseEvent);
@@ -222,7 +226,7 @@ final class Wallet
     private function saveEvent(WalletEventInterface $walletEvent): bool
     {
         $this->checkEventCount($walletEvent);
-        
+
         return $this->walletRepository->createEvent($walletEvent);
     }
 

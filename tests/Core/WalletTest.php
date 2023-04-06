@@ -6,6 +6,9 @@ use D3cr33\Wallet\Test\TestCase;
 
 class WalletTest extends TestCase
 {
+    /**
+     * update test wallet initialize method
+     */
     public function test_wallet_initialize()
     {
         $userId = fake()->numberBetween(1000, 9999);

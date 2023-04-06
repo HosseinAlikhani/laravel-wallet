@@ -2,6 +2,8 @@
 
 use D3cr33\Wallet\Core\Events\DecreaseWalletEvent;
 use D3cr33\Wallet\Core\Events\IncreaseWalletEvent;
+use D3cr33\Wallet\Core\Events\LockWalletEvent;
+use D3cr33\Wallet\Core\Events\UnLockWalletEvent;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,9 +21,12 @@ return new class extends Migration
             $table->integer('amount');
             $table->enum('event_type', [
                 IncreaseWalletEvent::EVENT_TYPE,
-                DecreaseWalletEvent::EVENT_TYPE
+                DecreaseWalletEvent::EVENT_TYPE,
+                LockWalletEvent::EVENT_TYPE,
+                UnLockWalletEvent::EVENT_TYPE
             ]);
             $table->integer('event_count');
+            $table->json('detail');
             $table->timestamp('created_at');
         });
     }
