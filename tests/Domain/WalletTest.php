@@ -7,7 +7,7 @@ use D3cr33\Wallet\Test\TestCase;
 class WalletTest extends TestCase
 {
     /**
-     * update test wallet initialize method
+     * test wallet initialize method without previous data
      */
     public function test_wallet_initialize_without_previous_data()
     {
@@ -20,5 +20,15 @@ class WalletTest extends TestCase
         $this->assertEquals(0, $wallet->balance);
         $this->assertNull($wallet->eventType);
         $this->assertEquals(0, $wallet->eventCount);
+    }
+
+    /**
+     * test wallet initialize method with previous data
+     */
+    public function test_wallet_initialize_with_previous_data()
+    {
+        $previousSnapshot = $this->faker->snapshot();
+
+        $snapshot = Wallet::initialize($previousSnapshot->userId);
     }
 }
