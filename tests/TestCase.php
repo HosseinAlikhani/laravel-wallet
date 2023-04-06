@@ -6,10 +6,15 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
+    /**
+     * store wallet faker
+     */
+    protected WalletFaker $faker;
+
     public function setUp(): void
     {
         parent::setUp();
-
+        $this->faker = app(WalletFaker::class);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
     }
 
