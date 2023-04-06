@@ -38,6 +38,12 @@ class WalletEvent
     public string $createdAt;
 
     /**
+     * store detail of events
+     * @var array
+     */
+    public array $detail;
+
+    /**
      * create new instance of wallet event
      * @param string $uuid
      * @param string $userId
@@ -50,13 +56,15 @@ class WalletEvent
         string $userId,
         int $amount,
         int $eventCount,
-        string $createdAt
+        string $createdAt,
+        array $detail
     )
     {
         $this->uuid = $uuid;
         $this->userId = $userId;
         $this->amount = $amount;
         $this->eventCount = $eventCount;
+        $this->detail = $detail;
         $this->createdAt = $createdAt;
     }
 
@@ -71,14 +79,16 @@ class WalletEvent
         string $userId,
         int $amount,
         int $eventCount,
-        string $createdAt
+        string $createdAt,
+        array $detail
     ){
         return new static(
             Str::uuid(),
             $userId,
             $amount,
             $eventCount,
-            $createdAt
+            $createdAt,
+            $detail
         );
     }
 
@@ -94,7 +104,8 @@ class WalletEvent
             'amount'    =>  $this->amount,
             'event_type'   =>  $this->getEventType(),
             'event_count'   =>  $this->eventCount,
-            'created_at'    =>  $this->createdAt
+            'detail'    =>  $this->detail,
+            'created_at'    =>  $this->createdAt,
         ];
     }
 
@@ -107,7 +118,7 @@ class WalletEvent
     {
         $namespace = null;
         switch($event->event_type){
-            case IncreaseWalletEvent::EVENT_TYPE: 
+            case IncreaseWalletEvent::EVENT_TYPE:
                 $namespace = IncreaseWalletEvent::class;
                 break;
             case DecreaseWalletEvent::EVENT_TYPE:
@@ -122,7 +133,8 @@ class WalletEvent
             $event->user_id,
             $event->amount,
             $event->event_count,
-            $event->created_at
+            $event->created_at,
+            $event->detail,
         );
     }
 }
