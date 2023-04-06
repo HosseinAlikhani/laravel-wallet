@@ -29,7 +29,12 @@ final class WalletRepository
             ->where('user_id', $userId)
             ->orderByDesc('event_count')
             ->first();
-        return  $result ? WalletEvent::toObject($result) : null;
+        if(! $result){
+            return null;
+        }
+
+        $result->detail = json_encode($result->detail);
+        return WalletEvent::toObject($result);
     }
 
     /**
