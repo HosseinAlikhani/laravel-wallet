@@ -5,6 +5,7 @@
  * 2- test wallet initialize method with previous data ( find snapshot from user id )
  * 3- test wallet findSnapshot without find anything ( without find snapshot from user id)
  * 4- test wallet findSnapshot with find snapshot ( find snapshot from user id)
+ * 5- test wallet apply method when increaseWalletEvent exist and check properties after updated aggregate
  */
 namespace D3CR33\Wallet\Test\Domain;
 
@@ -63,5 +64,22 @@ class WalletTest extends TestCase
         $result = $this->faker->invokeProtectMethod($walletObject, 'findSnapshot', [$previousSnapshot->userId]);
 
         $this->assertEquals( $previousSnapshot->toArray(), $result->toArray() );
+    }
+
+    /**
+     * test increase wallet event with apply method
+     */
+    public function test_apply_method_with_increase_wallet_event()
+    {
+        $wallet = Wallet::initialize($this->faker->userId());
+        $increaseWallet = $this->faker->increaseWalletEvent();
+        $result = $this->faker->invokeProtectMethod($wallet, 'apply', [$increaseWallet]);
+
+        $this->assertTrue($result);
+        $this->assertEquals( $increaseWallet->uuid, $wallet->uuid );
+        $this->assertEquals( $increaseWallet->amount, $wallet->amount );
+        $this->assertEquals( $increaseWallet->eventCount, $wallet->eventCount );
+        $this->assertEquals( $increaseWallet->getEventType(), $wallet->eventType );
+        $this->assertEquals( $increaseWallet->createdAt, $wallet->createdAt );
     }
 }
