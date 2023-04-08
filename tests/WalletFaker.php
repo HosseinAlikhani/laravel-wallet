@@ -1,6 +1,8 @@
 <?php
 namespace D3cr33\Wallet\Test;
 
+use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
+use D3cr33\Wallet\Core\Events\IncreaseWalletEvent;
 use D3cr33\Wallet\Core\Wallet;
 
 final class WalletFaker
@@ -13,6 +15,21 @@ final class WalletFaker
     public function snapshot(array $state = []): Wallet
     {
         return (Wallet::initialize($this->userId()))->increase($this->amount());
+    }
+
+    /**
+     * generate increase wallet event
+     * @return WalletEventInterface
+     */
+    public function increaseWalletEvent(): WalletEventInterface
+    {
+        return IncreaseWalletEvent::initialize(
+            $this->userId(),
+            $this->amount(),
+            fake()->numberBetween(100, 9999),
+            fake()->date(),
+            []
+        );
     }
 
     /**
