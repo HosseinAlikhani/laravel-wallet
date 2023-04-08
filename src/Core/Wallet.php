@@ -130,8 +130,12 @@ final class Wallet
             return false;
         }
 
+        // check if event count is not valid, do not apply event
+        if(! $this->updateEventCount($walletEvent->eventCount) ){
+            return false;
+        }
+
         $this->$method($walletEvent);
-        $this->updateEventCount($walletEvent->eventCount);
         $this->eventType = $walletEvent->getEventType();
         $this->createdAt = $walletEvent->createdAt;
         $this->recordEvent($walletEvent);
