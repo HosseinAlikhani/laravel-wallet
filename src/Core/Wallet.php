@@ -136,6 +136,7 @@ final class Wallet
         }
 
         $this->$method($walletEvent);
+        $this->uuid = $walletEvent->uuid;
         $this->eventType = $walletEvent->getEventType();
         $this->createdAt = $walletEvent->createdAt;
         $this->recordEvent($walletEvent);
