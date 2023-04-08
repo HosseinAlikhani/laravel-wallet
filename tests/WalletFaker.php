@@ -27,7 +27,7 @@ final class WalletFaker
             $this->userId(),
             $this->amount(),
             fake()->numberBetween(100, 9999),
-            fake()->date(),
+            fake()->dateTime()->format('Y-m-d H:i:s'),
             []
         );
     }
