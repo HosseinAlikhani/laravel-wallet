@@ -30,5 +30,7 @@ class WalletTest extends TestCase
         $previousSnapshot = $this->faker->snapshot();
 
         $snapshot = Wallet::initialize($previousSnapshot->userId);
+
+        $this->assertEquals( $previousSnapshot->toArray(), $snapshot->toArray() );
     }
 }
