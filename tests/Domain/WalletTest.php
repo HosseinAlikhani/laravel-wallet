@@ -1,4 +1,9 @@
 <?php
+/**
+ * test wallet aggregate
+ * 1- test wallet initialize method without previous data ( not found user id in snapshot table )
+ * 2- test wallet initialize method with previous data ( find snapshot from user id )
+ */
 namespace D3CR33\Wallet\Test\Domain;
 
 use D3cr33\Wallet\Core\Wallet;
