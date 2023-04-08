@@ -32,4 +32,18 @@ final class WalletFaker
     {
         return fake()->numerify("###000");
     }
+
+    /**
+     * invoke class protected method
+     * @param object $object
+     * @param string $methodName
+     * @param array $params
+     */
+    public function invokeProtectMethod(object $object,string $methodName,array $params)
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+        return $method->invokeArgs($object, $params);
+    }
 }
