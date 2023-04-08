@@ -4,6 +4,7 @@
  * 1- test wallet initialize method without previous data ( not found user id in snapshot table )
  * 2- test wallet initialize method with previous data ( find snapshot from user id )
  * 3- test wallet findSnapshot without find anything ( without find snapshot from user id)
+ * 4- test wallet findSnapshot with find snapshot ( find snapshot from user id)
  */
 namespace D3CR33\Wallet\Test\Domain;
 
@@ -44,10 +45,23 @@ class WalletTest extends TestCase
     /**
      * test wallet findSnapshot without find anything
      */
-    public function test_wallet_find_snapshot_without_find_anything()
+    public function test_wallet_find_snapshot_return_null()
     {
         $walletObject = Wallet::initialize($this->faker->userId());
         $result = $this->faker->invokeProtectMethod($walletObject, 'findSnapshot', [$walletObject->userId]);
         $this->assertNull($result);
+    }
+
+    /**
+     * test wallet findSnapshot with find object
+     */
+    public function test_wallet_find_snapshot_return_snapshot()
+    {
+        $previousSnapshot = $this->faker->snapshot();
+
+        $walletObject = Wallet::initialize($this->faker->userId());
+        $result = $this->faker->invokeProtectMethod($walletObject, 'findSnapshot', [$previousSnapshot->userId]);
+
+        $this->assertEquals( $previousSnapshot->toArray(), $result->toArray() );
     }
 }
