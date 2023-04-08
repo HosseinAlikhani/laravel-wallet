@@ -5,8 +5,8 @@ interface WalletAdapterInterface
 {
     /**
      * get user wallet
-     * @param int $userId
+     * @param string $userId
      * @return WalletResponseInterface
      */
-    public function userWallet(int $userId): WalletResponseInterface;
+    public function userWallet(string $userId): WalletResponseInterface;
 }

@@ -20,10 +20,10 @@ final class WalletRepository
 
     /**
      * find last event by user id
-     * @param int $userId
+     * @param string $userId
      * @return WalletEvent|null
      */
-    public function findLastEventByUserId(int $userId): WalletEvent|null
+    public function findLastEventByUserId(string $userId): WalletEvent|null
     {
         $result = DB::table(self::TABLE_EVENT)
             ->where('user_id', $userId)
@@ -39,10 +39,10 @@ final class WalletRepository
 
     /**
      * find snapshot by user id
-     * @param int $userId
+     * @param string $userId
      * @return Wallet|null
      */
-    public function findSnapshotByUserId(int $userId): Wallet|null
+    public function findSnapshotByUserId(string $userId): Wallet|null
     {
         $snapshot = DB::table(self::TABLE_SNAPSHOT)
             ->where('user_id', $userId)->first();

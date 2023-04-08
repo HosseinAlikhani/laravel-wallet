@@ -18,15 +18,15 @@ final class WalletAdapter implements WalletAdapterInterface
 
     public function __construct(WalletRepository $walletRepository)
     {
-        $this->walletRepository = $walletRepository;    
+        $this->walletRepository = $walletRepository;
     }
 
     /**
      * get user wallet
-     * @param int $userId
+     * @param string $userId
      * @return WalletResponseInterface
      */
-    public function userWallet(int $userId): WalletResponseInterface
+    public function userWallet(string $userId): WalletResponseInterface
     {
         $snapshot = $this->walletRepository->findSnapshotByUserId($userId);
         if(! $snapshot){

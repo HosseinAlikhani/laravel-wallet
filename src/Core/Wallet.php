@@ -96,10 +96,10 @@ final class Wallet
 
     /**
      * initialize wallet aggregate
-     * @param int $userId
+     * @param string $userId
      * @return Wallet
      */
-    public static function initialize(int $userId): Wallet
+    public static function initialize(string $userId): Wallet
     {
         $instance = new self(Str::uuid(), $userId, 0, 0, null, 0, now() );
         $snapshot = $instance->findSnapshot($userId);
@@ -108,10 +108,10 @@ final class Wallet
 
     /**
      * restore wallet from snapshot records
-     * @param int $user
+     * @param string $user
      * @return Wallet|null
      */
-    private function findSnapshot(int $userId): Wallet|null
+    private function findSnapshot(string $userId): Wallet|null
     {
         return $this->walletRepository->findSnapshotByUserId($userId);
     }
@@ -119,19 +119,49 @@ final class Wallet
     /**
      * apply event on wallet
      * @param WalletEventInterface $walletEvent
+     * @return bool
      */
-    private function apply(WalletEventInterface $walletEvent)
+    private function apply(WalletEventInterface $walletEvent): bool
     {
         $class     = $walletEvent::class;
         $className = substr(strrchr($class, '\\'), 1);
         $method    = 'apply' . $className;
-        if (method_exists($this, $method)) {
-            $this->$method($walletEvent);
-            $this->eventCount = $walletEvent->eventCount;
-            $this->eventType = $walletEvent->getEventType();
-            $this->createdAt = $walletEvent->createdAt;
-            $this->recordEvent($walletEvent);
+        if(! method_exists($this, $method)){
+            return false;
         }
+
+        // check if event count is not valid, do not apply event
+        if(! $this->updateEventCount($walletEvent->eventCount) ){
+            return false;
+        }
+
+        $this->$method($walletEvent);
+        $this->uuid = $walletEvent->uuid;
+        $this->eventType = $walletEvent->getEventType();
+        $this->createdAt = $walletEvent->createdAt;
+        $this->recordEvent($walletEvent);
+        return true;
+    }
+
+    /**
+     * update wallet event count
+     * @param int $eventCount
+     * @return bool
+     */
+    private function updateEventCount(int $eventCount)
+    {
+        if(! $this->eventCount){
+            $this->eventCount = $eventCount;
+            return true;
+        }
+
+        if($this->eventCount + 1 != $eventCount){
+            //TODO need log message
+            return false;
+        }
+
+        $this->eventCount = $eventCount;
+        return true;
     }
 
     /**
