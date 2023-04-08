@@ -119,19 +119,23 @@ final class Wallet
     /**
      * apply event on wallet
      * @param WalletEventInterface $walletEvent
+     * @return bool
      */
-    private function apply(WalletEventInterface $walletEvent)
+    private function apply(WalletEventInterface $walletEvent): bool
     {
         $class     = $walletEvent::class;
         $className = substr(strrchr($class, '\\'), 1);
         $method    = 'apply' . $className;
-        if (method_exists($this, $method)) {
-            $this->$method($walletEvent);
-            $this->eventCount = $walletEvent->eventCount;
-            $this->eventType = $walletEvent->getEventType();
-            $this->createdAt = $walletEvent->createdAt;
-            $this->recordEvent($walletEvent);
+        if(! method_exists($this, $method)){
+            return false;
         }
+
+        $this->$method($walletEvent);
+        $this->eventCount = $walletEvent->eventCount;
+        $this->eventType = $walletEvent->getEventType();
+        $this->createdAt = $walletEvent->createdAt;
+        $this->recordEvent($walletEvent);
+        return true;
     }
 
     /**
