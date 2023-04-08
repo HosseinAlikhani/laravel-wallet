@@ -131,10 +131,31 @@ final class Wallet
         }
 
         $this->$method($walletEvent);
-        $this->eventCount = $walletEvent->eventCount;
+        $this->updateEventCount($walletEvent->eventCount);
         $this->eventType = $walletEvent->getEventType();
         $this->createdAt = $walletEvent->createdAt;
         $this->recordEvent($walletEvent);
+        return true;
+    }
+
+    /**
+     * update wallet event count
+     * @param int $eventCount
+     * @return bool
+     */
+    private function updateEventCount(int $eventCount)
+    {
+        if(! $this->eventCount){
+            $this->eventCount = $eventCount;
+            return true;
+        }
+
+        if($this->eventCount + 1 != $eventCount){
+            //TODO need log message
+            return false;
+        }
+
+        $this->eventCount = $eventCount;
         return true;
     }
 
