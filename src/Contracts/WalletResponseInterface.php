@@ -5,9 +5,9 @@ interface WalletResponseInterface
 {
     /**
      * get response data
-     * @return array|null
+     * @return array|string|null
      */
-    public function getData(): array|null;
+    public function getData(): array|string|null;
 
     /**
      * get response message

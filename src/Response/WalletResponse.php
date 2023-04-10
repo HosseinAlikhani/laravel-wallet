@@ -44,10 +44,15 @@ final class WalletResponse implements WalletResponseInterface
 
     /**
      * get response data
-     * @return array|null
+     * @param string|null $key
+     * @return array|string|null
      */
-    public function getData(): array|null
+    public function getData(string|null $key = null): array|string|null
     {
+        if($key){
+            return isset($this->data[$key]) ? $this->data[$key] : null;
+        }
+        
         return $this->data;
     }
 
