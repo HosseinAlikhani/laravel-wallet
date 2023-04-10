@@ -55,4 +55,26 @@ final class WalletPort
             (new UserWalletResource($wallet))->response()->getData(true)
         );
     }
+
+    /**
+     * debit user wallet
+     * @param string $userId
+     * @param string $amount
+     * @param string|null $description
+     * @return WalletResponseInterface
+     */
+    public function walletDebit(string $userId, string $amount, string|null $description = null): WalletResponseInterface
+    {
+        $wallet = Wallet::initialize($userId)
+            ->decrease($amount, [
+                'description'   =>  $description
+            ]);
+        return new WalletResponse(
+            Response::HTTP_OK,
+            trans('wallet::messages.wallet_debit_successfully',[
+                'amount'    =>  $amount
+            ]),
+            (new UserWalletResource($wallet))->response()->getData(true)
+        );
+    }
 }
