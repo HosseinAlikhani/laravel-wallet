@@ -19,6 +19,31 @@ final class WalletRepository
     public const TABLE_EVENT = 'wallet_events';
 
     /**
+     * find user events by user id
+     * @param string $userId
+     * @param array $filters
+     * @param string $filters[type]
+     * @param string $filters[order_by]
+     * @param string $filters[order_by_type]
+     * @param int|null $paginate
+     */
+    public function findUserEventsByUserId(string $userId, array $filters, int|null $paginate = null)
+    {
+        $result = DB::table(self::TABLE_EVENT)
+            ->where('user_id', '=', $userId);
+        
+        if( isset($filters['type']) ){
+            $result = $result->where('event_type', 'like', '%'.$filters['type'].'%');
+        }
+
+        if( isset($filters['order_by']) && isset($filters['order_by_type']) ){
+            $result = $result->orderBy($filters['order_by_type'], $filters['order_by']);
+        }
+
+        return $paginate ? $result->paginate($paginate) : $result->get();
+    }
+
+    /**
      * find last event by user id
      * @param string $userId
      * @return WalletEvent|null
