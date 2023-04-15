@@ -16,7 +16,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('wallet_events', function (Blueprint $table) {
-            $table->uuid('uuid');
+            $table->uuid('uuid')->primary();
             $table->string('user_id');
             $table->integer('amount');
             $table->enum('event_type', [
