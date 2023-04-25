@@ -6,6 +6,7 @@
  * 3- test wallet findSnapshot without find anything ( without find snapshot from user id)
  * 4- test wallet findSnapshot with find snapshot ( find snapshot from user id)
  * 5- test wallet apply method when increaseWalletEvent exist and check properties after updated aggregate
+ * 6- test wallet apply method when decreaseWalletEvent exist and check proprties after update aggregate
  */
 namespace D3CR33\Wallet\Test\Domain;
 
@@ -81,5 +82,22 @@ class WalletTest extends TestCase
         $this->assertEquals( $increaseWallet->eventCount, $wallet->eventCount );
         $this->assertEquals( $increaseWallet->getEventType(), $wallet->eventType );
         $this->assertEquals( $increaseWallet->createdAt, $wallet->createdAt );
+    }
+
+    /**
+     * test decrease wallet event with apply method
+     */
+    public function test_apply_method_with_decrease_wallet_event()
+    {
+        $wallet = Wallet::initialize($this->faker->userId());
+        $decreaseWallet = $this->faker->decreaseWalletEvent();
+        $result = $this->faker->invokeProtectMethod($wallet, 'apply', [$decreaseWallet]);
+
+        $this->assertTrue($result);
+        $this->assertEquals( $decreaseWallet->uuid, $wallet->uuid );
+        $this->assertEquals( $decreaseWallet->amount, $wallet->amount );
+        $this->assertEquals( $decreaseWallet->eventCount, $wallet->eventCount );
+        $this->assertEquals( $decreaseWallet->getEventType(), $wallet->eventType );
+        $this->assertEquals( $decreaseWallet->createdAt, $wallet->createdAt );
     }
 }
