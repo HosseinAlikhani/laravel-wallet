@@ -37,6 +37,18 @@ final class WalletPort
     }
 
     /**
+     * get user logs by user id
+     * @param string $userId
+     * @param array $filters
+     * @param int|null $paginate
+     */
+    public function userLogsByUserId(string $userId, array $filters = [], int|null $paginate = null)
+    {
+        return $this->walletRepository
+            ->findUserEventsByUserId($userId, $filters, $paginate);
+    }
+
+    /**
      * charge user wallet
      * @param string $userId
      * @param string $amount
