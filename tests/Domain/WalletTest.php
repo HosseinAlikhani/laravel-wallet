@@ -8,6 +8,7 @@
  * 5- test wallet apply method when increaseWalletEvent exist and check properties after updated aggregate
  * 6- test wallet apply method when decreaseWalletEvent exist and check proprties after update aggregate
  * 7- test wallet recordEvents method with single event
+ * 8- test wallet recordEvents method with multi events
  */
 namespace D3CR33\Wallet\Test\Domain;
 
@@ -111,5 +112,37 @@ class WalletTest extends TestCase
         $this->faker->invokeProtectMethod($wallet, 'recordEvent', [$decreaseWallet]);
 
         $this->assertEquals( $wallet->recoredEvents, [$decreaseWallet]);
+    }
+
+    /**
+     * test recordEvents method with multi events
+     */
+    public function test_record_events_with_multi_events()
+    {
+        $wallet = Wallet::initialize($this->faker->userId());
+        $decreaseWallet1 = $this->faker->decreaseWalletEvent();
+        $this->faker->invokeProtectMethod($wallet, 'recordEvent', [$decreaseWallet1]);
+
+        $decreaseWallet2 = $this->faker->decreaseWalletEvent();
+        $this->faker->invokeProtectMethod($wallet, 'recordEvent', [$decreaseWallet2]);
+
+        $increaseWallet3 = $this->faker->increaseWalletEvent();
+        $this->faker->invokeProtectMethod($wallet, 'recordEvent', [$increaseWallet3]);
+
+        $increaseWallet4 = $this->faker->increaseWalletEvent();
+        $this->faker->invokeProtectMethod($wallet, 'recordEvent', [$increaseWallet4]);
+
+        $increaseWallet5 = $this->faker->increaseWalletEvent();
+        $this->faker->invokeProtectMethod($wallet, 'recordEvent', [$increaseWallet5]);
+
+        $decreaseWallet6 = $this->faker->decreaseWalletEvent();
+        $this->faker->invokeProtectMethod($wallet, 'recordEvent', [$decreaseWallet6]);
+
+        $this->assertEquals($decreaseWallet1, $wallet->recoredEvents[0]);
+        $this->assertEquals($decreaseWallet2, $wallet->recoredEvents[1]);
+        $this->assertEquals($increaseWallet3, $wallet->recoredEvents[2]);
+        $this->assertEquals($increaseWallet4, $wallet->recoredEvents[3]);
+        $this->assertEquals($increaseWallet5, $wallet->recoredEvents[4]);
+        $this->assertEquals($decreaseWallet6, $wallet->recoredEvents[5]);
     }
 }
