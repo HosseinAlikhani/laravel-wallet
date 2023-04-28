@@ -149,7 +149,6 @@ class WalletTest extends TestCase
     }
 
     /**
-     * test increase method with amount
      * - test wallet increase method one time
      * - check wallet instance after increase amount
      * - initialize again wallet with user id
@@ -161,7 +160,7 @@ class WalletTest extends TestCase
         $wallet = Wallet::initialize($userId);
         $walletUuidBeforeIncrease = $wallet->uuid;
 
-        $stepOneAmount = 40000;
+        $stepOneAmount = $this->faker->amount();
         $createAt = now();
         $wallet->increase($stepOneAmount);
 
@@ -181,7 +180,7 @@ class WalletTest extends TestCase
         $this->assertEquals(IncreaseWalletEvent::EVENT_TYPE, $snapshotWallet->eventType);
         $this->assertEquals(1, $snapshotWallet->eventCount);
 
-        $stepTwoAmount = 21400;
+        $stepTwoAmount = $this->faker->amount();
         $createAt = now();
         $walletUuidBeforeDecrease = $wallet->uuid;
         $wallet->decrease($stepTwoAmount);
