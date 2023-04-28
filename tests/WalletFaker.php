@@ -67,6 +67,21 @@ final class WalletFaker
     }
 
     /**
+     * generate event details fake
+     * @param array $state
+     * @return array
+     */
+    public function eventDetail(array $state = []): array
+    {
+        return array_merge([
+            'description'   =>  fake()->text(100),
+            'first_name'    =>  fake()->firstName(),
+            'last_name' =>  fake()->lastName(),
+            'phone'    =>  fake()->phoneNumber()
+        ], $state);
+    }
+
+    /**
      * invoke class protected method
      * @param object $object
      * @param string $methodName
