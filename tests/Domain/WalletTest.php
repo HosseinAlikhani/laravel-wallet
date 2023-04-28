@@ -155,7 +155,7 @@ class WalletTest extends TestCase
      * - initialize again wallet with user id
      * - check wallet instance after decrease with amount
      */
-    public function test_increase_method_with_amount()
+    public function test_increase_and_decrease_methods_with_amount()
     {
         $userId = $this->faker->userId();
         $wallet = Wallet::initialize($userId);
