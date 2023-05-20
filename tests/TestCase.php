@@ -21,14 +21,11 @@ class TestCase extends OrchestraTestCase
     protected function getEnvironmentSetUp($app)
     {
         // Setup default database to use sqlite :memory:
-        $app['config']->set('database.default', 'testbench');
-        $app['config']->set('database.connections.testbench', [
-            'driver' => 'mysql',
-            'host' =>   '127.0.0.1',
-            'port' => '3306',
-            'database' => 'laravel-wallet',
-            'username' => 'root',
-            'password' => '',
+        $app['config']->set('database.default', 'sqlite');
+        $app['config']->set('database.connections.sqlite', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
         ]);
     }
 
