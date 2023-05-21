@@ -4,10 +4,25 @@ namespace D3cr33\Wallet\Test;
 use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
 use D3cr33\Wallet\Core\Events\DecreaseWalletEvent;
 use D3cr33\Wallet\Core\Events\IncreaseWalletEvent;
+use D3cr33\Wallet\Core\Repositories\WalletRepository;
 use D3cr33\Wallet\Core\Wallet;
 
 final class WalletFaker
 {
+    /**
+     * store wallet repository
+     * @var WalletRepository
+     */
+    private ?WalletRepository $walletRepository = null;
+
+    /**
+     * make wallet repository
+     */
+    public function makeWalletRepository(): WalletRepository
+    {
+        return $this->walletRepository ?? app(WalletRepository::class);
+    }
+
     /**
      * generate fake snapshot
      * @param array $state
