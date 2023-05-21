@@ -92,4 +92,34 @@ class WalletRepositoryTest extends TestCase
         $this->assertInstanceOf( get_class($event), $lastEvent );
         $this->assertEquals( $event->uuid, $lastEvent->uuid );
     }
+
+    /**
+     * find user events by user id success
+     */
+    public function test_find_user_events_by_user_id_success()
+    {
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+        $wallet->increase($this->faker->amount());
+        $wallet->increase($this->faker->amount());
+        $wallet->decrease($this->faker->amount());
+        $wallet->increase($this->faker->amount());
+        $wallet->decrease($this->faker->amount());
+
+        $events = $this->faker->makeWalletRepository()->findUserEventsByUserId($userId,[
+            'order_by'  =>  'ASC',
+            'order_by_type' =>  'event_count'
+        ])->toArray();
+
+        $recordedEvents = [];
+        foreach($wallet->recoredEvents as $event){
+            $recordedEvents[] = $event->toArray();
+        }
+
+        foreach( $events as $key => $event ){
+            $events[$key] = (array) $event;
+        }
+        $this->assertCount(count($recordedEvents), $events);
+        $this->assertEquals( $recordedEvents, $events );
+    }
 }
