@@ -41,7 +41,7 @@ final class WalletRepository
      * @param string $filters[order_by_type]
      * @param int|null $paginate
      */
-    public function findUserEventsByUserId(string $userId, array $filters, int|null $paginate = null)
+    public function findUserEventsByUserId(string $userId, array $filters = [], int|null $paginate = null)
     {
         $result = DB::table(self::TABLE_EVENT)
             ->where('user_id', '=', $userId);
