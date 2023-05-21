@@ -5,6 +5,7 @@
  * 2- test update or create method success
  * 3- test find event by uuid success
  * 4- test find snapshot by user id success
+ * 5- test find last event by user id success
  */
 namespace D3CR33\Wallet\Test\Domain;
 
@@ -74,5 +75,21 @@ class WalletRepositoryTest extends TestCase
         $snapshot = $this->faker->makeWalletRepository()->findSnapshotByUserId($userId);
         $wallet->recoredEvents = [];
         $this->assertEquals($wallet, $snapshot);
+    }
+
+    /**
+     * find last event by user id success
+     */
+    public function test_find_last_event_by_user_id_success()
+    {
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+        $wallet->increase($this->faker->amount());
+
+        $event = current( $wallet->recoredEvents );
+        $lastEvent = $this->faker->makeWalletRepository()->findLastEventByUserId($userId);
+
+        $this->assertInstanceOf( get_class($event), $lastEvent );
+        $this->assertEquals( $event->uuid, $lastEvent->uuid );
     }
 }
