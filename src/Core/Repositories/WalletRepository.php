@@ -19,6 +19,20 @@ final class WalletRepository
     public const TABLE_EVENT = 'wallet_events';
 
     /**
+     * find event by uuid
+     * @param string $uuid
+     * @return ?WalletEvent
+     */
+    public function findEventByUuid(string $uuid): ?WalletEvent
+    {
+        $event = DB::table(self::TABLE_EVENT)
+            ->where('uuid', $uuid)
+            ->first();        
+        $event->detail = (array) json_decode($event->detail);
+        return $event ? WalletEvent::toObject((array) $event) : null;
+    }
+
+    /**
      * find user events by user id
      * @param string $userId
      * @param array $filters
