@@ -9,6 +9,7 @@
  * 6- test wallet apply method when decreaseWalletEvent exist and check proprties after update aggregate
  * 7- test wallet recordEvents method with single event
  * 8- test wallet recordEvents method with multi events
+ * 9- test increase method to check event saved or not
  */
 namespace D3CR33\Wallet\Test\Domain;
 
@@ -144,5 +145,17 @@ class WalletTest extends TestCase
         $this->assertEquals($increaseWallet4, $wallet->recoredEvents[3]);
         $this->assertEquals($increaseWallet5, $wallet->recoredEvents[4]);
         $this->assertEquals($decreaseWallet6, $wallet->recoredEvents[5]);
+    }
+
+    /**
+     * test increase method to check event saved or not
+     */
+    public function test_increase_method_to_check_event_saved()
+    {
+        $wallet = Wallet::initialize($this->faker->userId());
+        
+        $amount = $this->faker->amount();
+        $detail = $this->faker->eventDetail();
+        $wallet->increase($amount, $detail);
     }
 }
