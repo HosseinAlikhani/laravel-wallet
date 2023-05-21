@@ -12,6 +12,7 @@
  * 9- test wallet increase/decrease method with amount
  * 10- test wallet increase/decrease methods with amount + detail
  * 11- test wallet increase/decrease method to check event save or not
+ * 12- test wallet increase/decrease method to check snapshot sync or not
  */
 namespace D3CR33\Wallet\Test\Domain;
 
@@ -249,5 +250,31 @@ class WalletTest extends TestCase
         $this->assertInstanceOf(DecreaseWalletEvent::class, $event);
         $this->assertEquals($amount, $event->amount);
         $this->assertEquals($detail, $event->detail);
+    }
+
+    /**
+     * test wallet increase/decrease method to check snapshot sync or not
+     */
+    public function test_increase_and_decrease_methods_to_check_snapshot_saved()
+    {
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+        
+        $amount = $this->faker->amount();
+        $wallet->increase($amount, $this->faker->eventDetail());
+
+        $snapshot = app(WalletRepository::class)->findSnapshotByUserId($userId);
+        $this->assertEquals($snapshot->amount, $amount);
+        $this->assertEquals($snapshot->balance, $amount);
+
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+        
+        $amount = $this->faker->amount();
+        $wallet->decrease($amount, $this->faker->eventDetail());
+
+        $snapshot = app(WalletRepository::class)->findSnapshotByUserId($userId);
+        $this->assertEquals($snapshot->amount, $amount);
+        $this->assertEquals($snapshot->balance, - $amount);
     }
 }
