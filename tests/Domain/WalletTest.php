@@ -11,10 +11,14 @@
  * 8- test wallet recordEvents method with multi events
  * 9- test wallet increase/decrease method with amount
  * 10- test wallet increase/decrease methods with amount + detail
+ * 11- test wallet increase/decrease method to check event save or not
+ * 12- test wallet increase/decrease method to check snapshot sync or not
  */
 namespace D3CR33\Wallet\Test\Domain;
 
+use D3cr33\Wallet\Core\Events\DecreaseWalletEvent;
 use D3cr33\Wallet\Core\Events\IncreaseWalletEvent;
+use D3cr33\Wallet\Core\Repositories\WalletRepository;
 use D3cr33\Wallet\Core\Wallet;
 use D3cr33\Wallet\Test\TestCase;
 
@@ -149,7 +153,7 @@ class WalletTest extends TestCase
         $this->assertEquals($decreaseWallet6, $wallet->recoredEvents[5]);
     }
 
-    /**
+    /*
      * - test wallet increase method one time
      * - check wallet instance after increase amount
      * - initialize again wallet with user id
@@ -216,5 +220,61 @@ class WalletTest extends TestCase
 
         $recordedEvent = end($wallet->recoredEvents);
         $this->assertEquals($detail, $recordedEvent->detail);
+    }
+
+    /**
+     * test increase/decrease methods to check event saved or not
+     */
+    public function test_increase_and_decrease_methods_to_check_event_saved()
+    {
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+        
+        $amount = $this->faker->amount();
+        $detail = $this->faker->eventDetail();
+        $wallet->increase($amount, $detail);
+
+        $event = app(WalletRepository::class)->findLastEventByUserId($userId);
+        $this->assertInstanceOf(IncreaseWalletEvent::class, $event);
+        $this->assertEquals($amount, $event->amount);
+        $this->assertEquals($detail, $event->detail);
+
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+        
+        $amount = $this->faker->amount();
+        $detail = $this->faker->eventDetail();
+        $wallet->decrease($amount, $detail);
+
+        $event = app(WalletRepository::class)->findLastEventByUserId($userId);
+        $this->assertInstanceOf(DecreaseWalletEvent::class, $event);
+        $this->assertEquals($amount, $event->amount);
+        $this->assertEquals($detail, $event->detail);
+    }
+
+    /**
+     * test wallet increase/decrease method to check snapshot sync or not
+     */
+    public function test_increase_and_decrease_methods_to_check_snapshot_saved()
+    {
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+        
+        $amount = $this->faker->amount();
+        $wallet->increase($amount, $this->faker->eventDetail());
+
+        $snapshot = app(WalletRepository::class)->findSnapshotByUserId($userId);
+        $this->assertEquals($snapshot->amount, $amount);
+        $this->assertEquals($snapshot->balance, $amount);
+
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+        
+        $amount = $this->faker->amount();
+        $wallet->decrease($amount, $this->faker->eventDetail());
+
+        $snapshot = app(WalletRepository::class)->findSnapshotByUserId($userId);
+        $this->assertEquals($snapshot->amount, $amount);
+        $this->assertEquals($snapshot->balance, - $amount);
     }
 }

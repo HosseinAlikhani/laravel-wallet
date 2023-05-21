@@ -4,10 +4,25 @@ namespace D3cr33\Wallet\Test;
 use D3cr33\Wallet\Core\Events\Contracts\WalletEventInterface;
 use D3cr33\Wallet\Core\Events\DecreaseWalletEvent;
 use D3cr33\Wallet\Core\Events\IncreaseWalletEvent;
+use D3cr33\Wallet\Core\Repositories\WalletRepository;
 use D3cr33\Wallet\Core\Wallet;
 
 final class WalletFaker
 {
+    /**
+     * store wallet repository
+     * @var WalletRepository
+     */
+    private ?WalletRepository $walletRepository = null;
+
+    /**
+     * make wallet repository
+     */
+    public function makeWalletRepository(): WalletRepository
+    {
+        return $this->walletRepository ?? app(WalletRepository::class);
+    }
+
     /**
      * generate fake snapshot
      * @param array $state
@@ -67,18 +82,16 @@ final class WalletFaker
     }
 
     /**
-     * generate event details fake
-     * @param array $state
-     * @return array
+     * generate fake event detail
      */
-    public function eventDetail(array $state = []): array
+    public function eventDetail(): array
     {
-        return array_merge([
-            'description'   =>  fake()->text(100),
-            'first_name'    =>  fake()->firstName(),
-            'last_name' =>  fake()->lastName(),
-            'phone'    =>  fake()->phoneNumber()
-        ], $state);
+        return [
+            'requester_id'  =>  $this->userId(),
+            'requester_first_name'  =>  fake()->firstName(),
+            'requester_last_name'   =>  fake()->lastName(),
+            'trigger_from'  =>  fake()->name()
+        ];
     }
 
     /**
