@@ -67,6 +67,19 @@ final class WalletFaker
     }
 
     /**
+     * generate fake event detail
+     */
+    public function eventDetail(): array
+    {
+        return [
+            'requester_id'  =>  $this->userId(),
+            'requester_first_name'  =>  fake()->firstName(),
+            'requester_last_name'   =>  fake()->lastName(),
+            'trigger_from'  =>  fake()->name()
+        ];
+    }
+
+    /**
      * invoke class protected method
      * @param object $object
      * @param string $methodName
