@@ -217,16 +217,4 @@ class WalletTest extends TestCase
         $recordedEvent = end($wallet->recoredEvents);
         $this->assertEquals($detail, $recordedEvent->detail);
     }
-
-    /**
-     * test increase method to check event saved or not
-     */
-    public function test_increase_method_to_check_event_saved()
-    {
-        $wallet = Wallet::initialize($this->faker->userId());
-        
-        $amount = $this->faker->amount();
-        $detail = $this->faker->eventDetail();
-        $wallet->increase($amount, $detail);
-    }
 }
