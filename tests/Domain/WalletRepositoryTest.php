@@ -3,6 +3,7 @@
  * test wallet repository
  * 1- test save event method success
  * 2- test update or create method success
+ * 3- test find event by uuid success
  */
 namespace D3CR33\Wallet\Test\Domain;
 
@@ -41,5 +42,22 @@ class WalletRepositoryTest extends TestCase
 
         $this->assertInstanceOf(Wallet::class, $snapshot);
         $this->assertEquals( $wallet, $snapshot );
+    }
+
+    /**
+     * find event by uuid success
+     */
+    public function test_find_event_by_uuid_success()
+    {
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+
+        $wallet->increase($this->faker->amount());
+
+        $event = current( $wallet->recoredEvents );
+        $findEvent = $this->faker->makeWalletRepository()->findEventByUuid($event->uuid);
+        
+        $this->assertInstanceOf( get_class($event), $findEvent );
+        $this->assertEquals( $event->uuid, $findEvent->uuid );
     }
 }
