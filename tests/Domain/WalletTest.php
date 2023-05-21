@@ -9,10 +9,12 @@
  * 6- test wallet apply method when decreaseWalletEvent exist and check proprties after update aggregate
  * 7- test wallet recordEvents method with single event
  * 8- test wallet recordEvents method with multi events
- * 9- test increase method to check event saved or not
+ * 9- test wallet increase/decrease method with amount
+ * 10- test wallet increase/decrease methods with amount + detail
  */
 namespace D3CR33\Wallet\Test\Domain;
 
+use D3cr33\Wallet\Core\Events\IncreaseWalletEvent;
 use D3cr33\Wallet\Core\Wallet;
 use D3cr33\Wallet\Test\TestCase;
 
@@ -145,6 +147,75 @@ class WalletTest extends TestCase
         $this->assertEquals($increaseWallet4, $wallet->recoredEvents[3]);
         $this->assertEquals($increaseWallet5, $wallet->recoredEvents[4]);
         $this->assertEquals($decreaseWallet6, $wallet->recoredEvents[5]);
+    }
+
+    /*
+     * - test wallet increase method one time
+     * - check wallet instance after increase amount
+     * - initialize again wallet with user id
+     * - check wallet instance after decrease with amount
+     */
+    public function test_increase_and_decrease_methods_with_amount()
+    {
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+        $walletUuidBeforeIncrease = $wallet->uuid;
+
+        $stepOneAmount = $this->faker->amount();
+        $createAt = now();
+        $wallet->increase($stepOneAmount);
+
+        $this->assertNotEquals($walletUuidBeforeIncrease, $wallet->uuid);
+        $this->assertEquals($stepOneAmount, $wallet->amount);
+        $this->assertEquals($stepOneAmount, $wallet->balance);
+        $this->assertEquals(1, $wallet->eventCount);
+        $this->assertEquals($createAt, $wallet->createdAt);
+        $this->assertCount(1, $wallet->recoredEvents);
+
+        $recordEvent = current($wallet->recoredEvents);
+        $this->assertInstanceOf(IncreaseWalletEvent::class, $recordEvent);
+
+        $snapshotWallet = Wallet::initialize($userId);
+        $this->assertEquals($stepOneAmount, $snapshotWallet->amount);
+        $this->assertEquals($stepOneAmount, $snapshotWallet->balance);
+        $this->assertEquals(IncreaseWalletEvent::EVENT_TYPE, $snapshotWallet->eventType);
+        $this->assertEquals(1, $snapshotWallet->eventCount);
+
+        $stepTwoAmount = $this->faker->amount();
+        $createAt = now();
+        $walletUuidBeforeDecrease = $wallet->uuid;
+        $wallet->decrease($stepTwoAmount);
+
+        $this->assertNotEquals($walletUuidBeforeDecrease, $wallet->uuid);
+        $this->assertEquals($stepTwoAmount, $wallet->amount);
+        $this->assertEquals($stepOneAmount - $stepTwoAmount, $wallet->balance);
+        $this->assertEquals(2, $wallet->eventCount);
+        $this->assertEquals($createAt, $wallet->createdAt);
+        $this->assertCount(2, $wallet->recoredEvents);
+    }
+
+    /**
+     * test increase & decrease methods with amount and details params and check details
+     */
+    public function test_increase_and_decrease_methods_with_amount_details()
+    {
+        $userId = $this->faker->userId();
+        $wallet = Wallet::initialize($userId);
+
+        // check detail in increase method
+        $amount = $this->faker->amount();
+        $detail = $this->faker->eventDetail();
+        $wallet->increase($amount, $detail);
+
+        $recordedEvent = current($wallet->recoredEvents);
+        $this->assertEquals($detail, $recordedEvent->detail);
+
+        // check detail in decrease method
+        $detail = $this->faker->eventDetail();
+        $wallet->increase($amount, $detail);
+
+        $recordedEvent = end($wallet->recoredEvents);
+        $this->assertEquals($detail, $recordedEvent->detail);
     }
 
     /**
