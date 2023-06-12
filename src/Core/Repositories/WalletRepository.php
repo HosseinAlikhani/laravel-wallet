@@ -54,7 +54,11 @@ final class WalletRepository
             $result = $result->orderBy($filters['order_by_type'], $filters['order_by']);
         }
 
-        return $paginate ? $result->paginate($paginate) : $result->get();
+        $result = $paginate ? $result->paginate($paginate) : $result->get();
+        foreach($result as $key => $value){
+            $result[$key]->detail = (array) json_decode($value->detail);
+        }
+        return $result;
     }
 
     /**
